@@ -34,14 +34,14 @@ echo $sys_ram
 ```
 
 #### mem_greater
-Returns 0 (true) if the total system ram (less that allocated to the GPU) is greater than the supplied parameter, otherwise returns 1 (false). Example:
+Returns 0 (true) if the total system ram (less GPU memory allocated) is greater than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
 if mem_greater 256; then
     echo 'You have more than 256k of total system ram'
 ```
 
 #### mem_less
-Returns 0 (true) if the total system ram (less that allocated to the GPU) is less than the supplied parameter, otherwise returns 1 (false). Example:
+Returns 0 (true) if the total system ram (less GPU memory allocated) is less than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
 if mem_less 512; then
     echo 'You have less than 512k of total system ram'
@@ -65,27 +65,23 @@ With `max` as the parameter sets the GPU memory to recommended max value for the
 #### gpu_mem256
 Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 256MB of memory. (It is ignored if memory size is not 256MB). This overrides gpu_mem.
 
-Setting gpu_mem_256, gpu_mem_512, and gpu_mem_1024 will allow swapping of the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
+Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
 #### gpu_mem512
 Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 512MB of memory. (It is ignored if memory size is not 512MB). This overrides gpu_mem.
 
-Setting gpu_mem_256, gpu_mem_512, and gpu_mem_1024 will allow swapping of the boot drive between Pis with different amounts of RAM without having to edit config.txt each time
+Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
 #### gpu_mem1024
 Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 1024MB of memory. (It is ignored if memory size is not 1024MB). This overrides gpu_mem.
 
-Setting gpu_mem_256, gpu_mem_512, and gpu_mem_1024 will allow swapping of the boot drive between Pis with different amounts of RAM without having to edit config.txt each time
+Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
 #### mem_rdisk
 Setups up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
 
 **Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
 
-### CPU Functions
-
-
-### GPIO Functions
 
 ## TODO
 * [ ] Memory functions:
@@ -101,14 +97,22 @@ Setups up a ramdisk for temporary files to preserve SD card life by preventing S
         + [ ] **mem_less**
     - [ ] **gpu_mem**
         + [ ] insert table into README.md of default values for each pi model
-        + [ ] insert table into README.md of max recommended values for each pi model
+        + [ ] insert table into README.md of max recommended values for eachpi model
+        + [ ] insert examples for each invocation
     - [ ] **gpu_mem256**
+        + [ ] insert example for invocation
     - [ ] **gpu_mem512**
+        + [ ] insert example for invocation
     - [ ] **gpu_mem1024**
+        + [ ] insert example for invocation
     - [ ] **mem_rdisk**
         + [ ] complete spec'ing out function README.md
-    - [ ] investigate zswap (**mem_zswap**)
-    - [ ] investigate swapiness (**mem_swap**)
+    - [ ] **mem_zswap**
+        + [ ] investigate zswap
+        + [ ] spec out zswap
+    - [ ] **mem_swap**
+        + [ ] investigate swapiness
+        + [ ] spec out swapiness
 * [ ] CPU functions:
     - [ ] Spec out functions in README.md
     - [ ] **cpu_id**
