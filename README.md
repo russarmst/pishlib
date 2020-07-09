@@ -7,8 +7,27 @@
 
 ### [Installation and Usage](#Installation-and-Usage)
 ### [Functions](#Functions)
-### [Memory Functions](#Memory-Functions)
-
+#### [Memory Functions](#Memory-Functions)
+##### [mem_is](#mem_is)
+##### [mem_total](#mem_total)
+##### [mem_greater](#mem_greater)
+##### [mem_less](#mem_less)
+##### [mem_rdisk](#mem_rdisk)
+##### [mem_zswap](#mem_zswap)
+##### [mem_swap](#mem_swap)
+#### [GPU Functions](#GPU-Functions)
+##### [gpu_mem](#gpu_mem)
+##### [gpu_mem256](#)
+##### [gpu_mem512](#gpu_mem512)
+##### [gpu_mem1024](#gpu_mem1024)
+#### [CPU functions](CPU-functions)
+##### [cpu_id](#cpu_id)
+##### [cpu_max](#cpu_max)
+##### [cpu_min](#cpu_min)
+##### [cpu_ocd](#cpu_ocd)
+##### [cpu_oc](#cpu_oc)
+##### [cpu_gov](#cpu_gov)
+##### [cpu_temp](#cpu_temp)
 
 ## Installation and Usage
 Clone the project:
@@ -25,7 +44,7 @@ In your shell script add the following:
 pishlib contains many functions to query and control a Raspberry Pi from your script.
 
 ### Memory Functions
-#### mem_is*[k|m]
+#### mem_is
 Suite of functions eg. mem_is256k, mem_is1m etc. which return 0 (true) if the Pi has xxx[k|m] memory otherwise returns 1 (false). Example:
 ```shell
 if mem_is256k; then
@@ -54,6 +73,16 @@ if mem_less 512; then
     echo 'You have less than 512k of total system ram'
 ```
 
+#### mem_rdisk
+Setups up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
+
+**Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
+
+#### mem_zswap
+
+#### mem_swap
+
+### GPU Functions
 #### gpu_mem
 Function to report or set the amount of memory (in megabytes) to reserve for the exclusive use of the GPU: the remaining memory is allocated to the ARM CPU.
 
@@ -84,10 +113,17 @@ Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspb
 
 Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
-#### mem_rdisk
-Setups up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
+### CPU functions
+#### cpu_id
+#### cpu_max
+#### cpu_min
+#### cpu_ocd
+#### cpu_oc
+#### cpu_gov
+#### cpu_temp
 
-**Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
+### GPIO functions
+
 
 ## Contributing
 If you have the time and the ability to contribute then your conributions will be gratefully recieved and credited to you. You can contribute in one of the following ways:
@@ -97,6 +133,7 @@ If you have the time and the ability to contribute then your conributions will b
 * Bug reports via Github Issues
 * Additions and corrections to the Documentation and Examples via Github Pull Requests
 * Technical review via Github Issues and/or comments in Pull Request. For example are default settings sane, does this methodology work on a particular model of Pi, does this have side effects that the user should be aware of etc.
+* Techincal implementation details for functions ie. how would we achieve the desired functionality using bash.
 
 ## Credits
 * Russell Armstrong - original author and project maintainer
