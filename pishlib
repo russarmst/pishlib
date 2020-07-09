@@ -1,8 +1,10 @@
 #
 # pishlib
 #
-#   library of helper functions for shell scripts on the Raspberry Pi
-#   range computers
+#   Library of helper functions for shell scripts on the Raspberry Pi
+#   range computers.
+#
+#   Add '. /path/to/pishlib' to your shell script to use the functions.
 #
 #   Released under the MIT licence
 #   Copyright (c) 2020 Russell Armstrong
