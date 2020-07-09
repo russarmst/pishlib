@@ -45,14 +45,15 @@ pishlib contains many functions to query and control a Raspberry Pi from your sc
 
 ### Memory Functions
 #### mem_is
-Suite of functions eg. mem_is256k, mem_is1m etc. which return 0 (true) if the Pi has xxx[k|m] memory otherwise returns 1 (false). Example:
+Suite of functions eg. mem_is256m, mem_is1g etc. which return 0 (true) if the Pi has xxx[m|g] memory otherwise returns 1 (false). Example:
 ```shell
-if mem_is256k; then
+if mem_is256m; then
     echo 'Your Pi has 256k of total system ram'
+fi
 ```
 
 #### mem_total
-Returns total system memory (less GPU memory allocated) in Kilobytes (Kb). Example:
+Returns total system memory (less GPU memory allocated) in Megabytes (Mb). Example:
 ```shell
 sys_ram = mem_total
 
