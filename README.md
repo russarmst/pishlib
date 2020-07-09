@@ -5,9 +5,9 @@
 
 ## Contents
 
-[Installation and Usage](#Installation and Usage)
+[Installation and Usage](#Installation-and-Usage)
 [Functions](#Functions)
-[Memory Functions](#Memory Functions)
+[Memory Functions](#Memory-Functions)
 
 
 ## Installation and Usage
