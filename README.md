@@ -3,11 +3,11 @@
 ## Introduction
 **pi** **sh**ell **lib**rary is a script containing helper functions for Bash (and others) shell scripts written for Rapsberry Pi computers.
 
-## Contents
+## Table of Contents
 
-[Installation and Usage](#Installation-and-Usage)
-[Functions](#Functions)
-[Memory Functions](#Memory-Functions)
+### [Installation and Usage](#Installation-and-Usage)
+### [Functions](#Functions)
+### [Memory Functions](#Memory-Functions)
 
 
 ## Installation and Usage
