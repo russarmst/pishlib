@@ -1,0 +1,35 @@
+#
+# pishlib
+#
+#   library of helper functions for shell scripts on the Raspberry Pi
+#   range computers
+#
+#   Released under the MIT licence
+#   Copyright (c) 2020 Russell Armstrong
+#
+
+mem_is256k () {
+	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+	[[ $mem -lt 262144 ]]
+}
+
+mem_is512k () {
+	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+	[[ $mem -lt 524288 ]] && [[ $mem -gt 262144 ]]
+}
+
+mem_is1m () {
+	[[ $1 -lt 1048576 ]] && [[ $mem -gt 524288 ]]
+}
+
+mem_is2m () {
+	[[ $1 -lt 2097152 ]] && [[ $mem -gt 1048576 ]]
+}
+
+mem_is4m () {
+	[[ $1 -lt 4194304 ]] && [[ $mem -gt 2097152 ]]
+}
+
+mem_is8m () {
+	[[ $1 -gt 4194304 ]]
+}
