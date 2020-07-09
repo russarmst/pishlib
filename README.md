@@ -82,6 +82,17 @@ Setups up a ramdisk for temporary files to preserve SD card life by preventing S
 
 **Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
 
+## Contributing
+If you have the time and the ability to contribute then your conributions will be gratefully recieved and credited to you. You can contribute in one of the following ways:
+* Todo item implementation via GIthub Pull Request
+* Feature requests via Github Issues
+* Feature request implementation via Github Pull Requests
+* Bug reports via Github Issues
+* Additions and corrections to the Documentation and Examples via Github Pull Requests
+* Technical review via Github Issues and/or comments in Pull Request. For example are default settings sane, does this methodology work on a particular model of Pi, does this have side effects that the user should be aware of etc.
+
+## Credits
+* Russell Armstrong - original author and project maintainer
 
 ## TODO
 * [ ] Memory functions:
