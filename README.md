@@ -153,7 +153,7 @@ If you have the time and the ability to contribute then your conributions will b
         + [x] **mem_is2g**
         + [x] **mem_is4g**
         + [x] **mem_is8g**
-        + [ ] **mem_total**
+        + [x] **mem_total**
         + [x] **mem_greater**
         + [x] **mem_less**
     - [ ] **mem_rdisk**
