@@ -97,15 +97,24 @@ If you have the time and the ability to contribute then your conributions will b
 ## TODO
 * [ ] Memory functions:
     - [ ] Identify how much total RAM the system has:
-        + [ ] **mem_is256k**
-        + [ ] **mem_is512k**
-        + [ ] **mem_is1m**
-        + [ ] **mem_is2m**
-        + [ ] **mem_is4m**
-        + [ ] **mem_is8m**
+        + [x] **mem_is256k**
+        + [x] **mem_is512k**
+        + [x] **mem_is1m**
+        + [x] **mem_is2m**
+        + [x] **mem_is4m**
+        + [x] **mem_is8m**
         + [ ] **mem_total**
         + [ ] **mem_greater**
         + [ ] **mem_less**
+    - [ ] **mem_rdisk**
+        + [ ] complete spec'ing out function README.md
+    - [ ] **mem_zswap**
+        + [ ] investigate zswap
+        + [ ] spec out zswap
+    - [ ] **mem_swap**
+        + [ ] investigate swapiness
+        + [ ] spec out swapiness
+* [ ] GPU functions:
     - [ ] **gpu_mem**
         + [ ] insert table into README.md of default values for each pi model
         + [ ] insert table into README.md of max recommended values for eachpi model
@@ -116,14 +125,7 @@ If you have the time and the ability to contribute then your conributions will b
         + [ ] insert example for invocation
     - [ ] **gpu_mem1024**
         + [ ] insert example for invocation
-    - [ ] **mem_rdisk**
-        + [ ] complete spec'ing out function README.md
-    - [ ] **mem_zswap**
-        + [ ] investigate zswap
-        + [ ] spec out zswap
-    - [ ] **mem_swap**
-        + [ ] investigate swapiness
-        + [ ] spec out swapiness
+    - [ ] **gpu_temp**
 * [ ] CPU functions:
     - [ ] Spec out functions in README.md
     - [ ] **cpu_id**
@@ -132,5 +134,6 @@ If you have the time and the ability to contribute then your conributions will b
     - [ ] **cpu_ocd**
     - [ ] **cpu_oc**
     - [ ] **cpu_gov**
+    - [ ] **cpu_temp**
 * [ ] GPIO functions:
     - [ ] Spec out functions in README.md
