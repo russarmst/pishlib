@@ -39,3 +39,18 @@ mem_is8g () {
 	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
 	[[ $mem -lt 8388608 ]] && [[ $mem -gt 4194304 ]]
 }
+
+mem_total () {
+	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+	echo $(( $mem / 1024 ))
+}
+
+mem_greater () {
+	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+	[[ $mem -gt $1 ]]
+}
+
+mem_less () {
+	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+	[[ $mem -lt $1 ]]
+}

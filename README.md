@@ -55,23 +55,28 @@ fi
 #### mem_total
 Returns total system memory (less GPU memory allocated) in Megabytes (Mb). Example:
 ```shell
-sys_ram = mem_total
-
+sys_ram = $(mem_total)
 echo $sys_ram 
 ```
 
 #### mem_greater
 Returns 0 (true) if the total system ram (less GPU memory allocated) is greater than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
-if mem_greater 256; then
-    echo 'You have more than 256k of total system ram'
+if [[ $(mem_greater 512) ]]; then
+    echo 'Your Pi has more than 512kB of system memory.'
+else
+    echo 'Your Pi has less than 512kB of system memory.'
+fi
 ```
 
 #### mem_less
 Returns 0 (true) if the total system ram (less GPU memory allocated) is less than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
-if mem_less 512; then
-    echo 'You have less than 512k of total system ram'
+if [[ $(mem_less 512) ]]; then
+    echo 'Your Pi has less than 512kB of system memory.'
+else
+    echo ' Your Pi has more than 512kB of system memory.'
+fi
 ```
 
 #### mem_rdisk
@@ -142,15 +147,15 @@ If you have the time and the ability to contribute then your conributions will b
 ## TODO
 * [ ] Memory functions:
     - [ ] Identify how much total RAM the system has:
-        + [x] **mem_is256k**
-        + [x] **mem_is512k**
-        + [x] **mem_is1m**
-        + [x] **mem_is2m**
-        + [x] **mem_is4m**
-        + [x] **mem_is8m**
+        + [x] **mem_is256m**
+        + [x] **mem_is512m**
+        + [x] **mem_is1g**
+        + [x] **mem_is2g**
+        + [x] **mem_is4g**
+        + [x] **mem_is8g**
         + [ ] **mem_total**
-        + [ ] **mem_greater**
-        + [ ] **mem_less**
+        + [x] **mem_greater**
+        + [x] **mem_less**
     - [ ] **mem_rdisk**
         + [ ] complete spec'ing out function README.md
     - [ ] **mem_zswap**
