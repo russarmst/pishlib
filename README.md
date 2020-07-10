@@ -187,3 +187,20 @@ If you have the time and the ability to contribute then your conributions will b
     - [ ] **cpu_temp**
 * [ ] GPIO functions:
     - [ ] Spec out functions in README.md
+* [ ] Model functions:
+    - [ ] **model_is4**
+    - [ ] **model_is3**
+    - [ ] **model_is2**
+    - [ ] **model_is1**
+    - [ ] **model_isa**
+    - [ ] **model_isb**
+    - [ ] **model_iscompute**
+    - [ ] **model_iszero**
+    - [ ] **model_greater**
+    - [ ] **model_less**
+    - [ ] **model_has_bt**
+    - [ ] **model_has_wifi**
+    - [ ] **model_has_net**
+    - [ ] **model_is32bit**
+    - [ ] **model_is64bit**
+    - [ ] **model_hascsi**
