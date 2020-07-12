@@ -49,7 +49,7 @@ fi
         + [cpu_gov](#cpu_gov)
         + [cpu_temp](#cpu_temp)
 * [Credits](#Credits)
-* [TODO][#Todo]
+* [TODO](#Todo)
 
 
 ## Installation and Usage
