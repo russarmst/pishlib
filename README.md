@@ -1,11 +1,31 @@
 # pishlib
 
 ## Introduction
-**pi** **sh**ell **lib**rary is a script containing helper functions for Bash (and others) shell scripts written for Rapsberry Pi computers.
+The aim of the **pi** **sh**ell **lib**rary (pishlib) is the Swiss Army Knife of shell scripting for the Pi range of computers by implementing elegant functions that make script writing easier, more robust and fun(?).
+
+Why write this:
+```shell
+sys_mem = $(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+
+if [[ $sys_mem -lt 4194304 ]] && [[ $sys_mem -gt 2097152 ]]; then
+    echo 'Your Pi has 4G of total system ram.'
+fi
+```
+
+when you can write this:
+```shell
+. /path/to/pishlib
+
+if mem_is4g; then
+    echo 'Your Pi has 4G of total system ram.'
+fi
+```
+
 
 ## Table of Contents
 
 * [Installation and Usage](#Installation-and-Usage)
+* [Contributing](#Contributing)
 * [Functions](#Functions)
     - [Memory Functions](#Memory-Functions)
         + [mem_is](#mem_is)
@@ -28,6 +48,9 @@
         + [cpu_oc](#cpu_oc)
         + [cpu_gov](#cpu_gov)
         + [cpu_temp](#cpu_temp)
+* [Credits](#Credits)
+* [TODO][#Todo]
+
 
 ## Installation and Usage
 Clone the project:
@@ -40,8 +63,21 @@ In your shell script add the following:
 . /path/to/pishlib
 ```
 
+
+## Contributing
+If you have the time and the ability to contribute then your conributions will be gratefully recieved and credited to you. You can contribute in one of the following ways:
+* Got an idea for a function to implement? Open a Github Issue for a **Feature Request**.
+* Found a **bug**? Open a Github Issue for a Bug Notice.
+* Have a Pi and some spare time? Spend some time **testing** and let us know if you find a bug.
+* Desperate to have a feature implemented? If you have the ability file a Pull Request with your **feature implemented**.
+* Want to donate some of your time? Pick an item off the Todo list, implement it and file a Pull Request.
+* Have you spotted a **typo or a correction** that is needed in the Documentation? File a Pull Request with your correction or a Github issue with details of what need to be chnaged. 
+* Spotted something that doens't quite make sense or could be implemeneted better? File a Github Issue for **Technical Review** and/or post a comment in the relevant Pull Request. 
+* Do you kow how we might implement (in Bash) one of the functions on the Todo list? File a Github Issue for **Techincal Review** with details of the implementation.
+
+
 ## Functions
-pishlib contains many functions to query and control a Raspberry Pi from your script.
+pishlib contains many functions to query and control a Raspberry Pi from your script and are grouped by functionality .
 
 ### Memory Functions
 #### mem_is
@@ -130,23 +166,32 @@ Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot dri
 
 ### GPIO functions
 
-
-## Contributing
-If you have the time and the ability to contribute then your conributions will be gratefully recieved and credited to you. You can contribute in one of the following ways:
-* Todo item implementation via GIthub Pull Request
-* Feature requests via Github Issues
-* Feature request implementation via Github Pull Requests
-* Bug reports via Github Issues
-* Additions and corrections to the Documentation and Examples via Github Pull Requests
-* Technical review via Github Issues and/or comments in Pull Request. For example are default settings sane, does this methodology work on a particular model of Pi, does this have side effects that the user should be aware of etc.
-* Techincal implementation details for functions ie. how would we achieve the desired functionality using bash.
+### Model functions
+#### model_is4
+#### model_is3
+#### model_is2
+#### model_is1
+#### model_isa
+#### model_isb
+#### model isplus
+#### model_iscompute
+#### model_iszero
+#### model_greater
+#### model_less
+#### model_get
+#### model_has_bt
+#### model_has_wifi
+#### model_has_net
+#### model_hascsi
+#### model_is32bit
+#### model_is64bit
 
 ## Credits
 * Russell Armstrong - original author and project maintainer
 
 ## TODO
 * [ ] Memory functions:
-    - [ ] Identify how much total RAM the system has:
+    - [x] Identify how much total RAM the system has:
         + [x] **mem_is256m**
         + [x] **mem_is512m**
         + [x] **mem_is1g**
@@ -194,10 +239,12 @@ If you have the time and the ability to contribute then your conributions will b
     - [ ] **model_is1**
     - [ ] **model_isa**
     - [ ] **model_isb**
+    - [ ] **model isplus**
     - [ ] **model_iscompute**
     - [ ] **model_iszero**
     - [ ] **model_greater**
     - [ ] **model_less**
+    - [ ] **model_get**
     - [ ] **model_has_bt**
     - [ ] **model_has_wifi**
     - [ ] **model_has_net**
