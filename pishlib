@@ -10,39 +10,40 @@
 #   Copyright (c) 2020 Russell Armstrong
 #
 
-mem_is256m () {
-	[[ $(mem_total) -lt 262144 ]]
+pl-mem_is256m () {
+	[[ $(pl-mem_total) -lt 262144 ]]
 }
 
-mem_is512m () {
-	[[ $(mem_total) -lt 524288 ]] && [[ $(mem_total) -gt 262144 ]]
+pl-mem_is512m () {
+	[[ $(pl-mem_total) -lt 524288 ]] && [[ $(pl-mem_total) -gt 262144 ]]
 }
 
-mem_is1g () {
-	[[ $(mem_total) -lt 1048576 ]] && [[ $(mem_total) -gt 524288 ]]
+pl-mem_is1g () {
+	[[ $(pl-mem_total) -lt 1048576 ]] && [[ $(pl-mem_total) -gt 524288 ]]
 }
 
-mem_is2g () {
-	[[ $(mem_total) -lt 2097152 ]] && [[ $(mem_total) -gt 1048576 ]]
+pl-mem_is2g () {
+	[[ $(pl-mem_total) -lt 2097152 ]] && [[ $(pl-mem_total) -gt 1048576 ]]
 }
 
-mem_is4g () {
-	[[ $(mem_total) -lt 4194304 ]] && [[ $(mem_total) -gt 2097152 ]]
+pl-mem_is4g () {
+	[[ $(pl-mem_total) -lt 4194304 ]] && [[ $(pl-mem_total) -gt 2097152 ]]
 }
 
-mem_is8g () {
-	[[ $(mem_total) -lt 8388608 ]] && [[ $(mem_total) -gt 4194304 ]]
+pl-mem_is8g () {
+	[[ $(pl-mem_total) -lt 8388608 ]] && [[ $(pl-mem_total) -gt 4194304 ]]
 }
 
-mem_total () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+pl-mem_total () {
+	mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 	echo $(( $mem / 1024 ))
 }
 
-mem_greater () {
-	[[ $(mem_total) -gt $1 ]]
+pl-mem_greater () {
+	[[ $(pl-mem_total) -gt $1 ]]
 }
 
-mem_less () {
-	[[ $(mem_total) -lt $1 ]]
+pl-mem_less () {
+	[[ $(pl-mem_total) -lt $1 ]]
 }
+

@@ -28,26 +28,27 @@ fi
 * [Contributing](#Contributing)
 * [Functions](#Functions)
     - [Memory Functions](#Memory-Functions)
-        + [mem_is](#mem_is)
-        + [mem_total](#mem_total)
-        + [mem_greater](#mem_greater)
-        + [mem_less](#mem_less) 
-        + [mem_rdisk](#mem_rdisk) 
-        + [mem_zswap](#mem_zswap) 
-        + [mem_swap](#mem_swap) 
+        + [pl-mem_is](#pl-mem_is)
+        + [pl-mem_total](#pl-mem_total)
+        + [pl-mem_greater](#pl-mem_greater)
+        + [pl-mem_less](#pl-mem_less) 
+        + [pl-mem_rdisk](#pl-mem_rdisk) 
+        + [pl-mem_zswap](#pl-mem_zswap) 
+        + [pl-mem_swap](#pl-mem_swap) 
     - [GPU Functions](#gpu-Functions)
-        + [gpu_mem](#gpu_mem) 
-        + [gpu_mem256](#) 
-        + [gpu_mem512](#gpu_mem512)
-        + [gpu_mem1024](#gpu_mem1024)
+        + [pl-gpu_mem](#pl-gpu_mem) 
+        + [pl-gpu_mem256](#pl-gpu_mem256) 
+        + [pl-gpu_mem512](#pl-gpu_mem512)
+        + [pl-gpu_mem1024](#pl-gpu_mem1024)
+        + [pl-gpu_temp](#pl-gpu_temp)
     - [CPU functions](cpu-functions)
-        + [cpu_id](#cpu_id)
-        + [cpu_max](#cpu_max)
-        + [cpu_min](#cpu_min)
-        + [cpu_ocd](#cpu_ocd)
-        + [cpu_oc](#cpu_oc)
-        + [cpu_gov](#cpu_gov)
-        + [cpu_temp](#cpu_temp)
+        + [pl-cpu_id](#pl-cpu_id)
+        + [pl-cpu_max](#pl-cpu_max)
+        + [pl-cpu_min](#pl-cpu_min)
+        + [pl-cpu_ocd](#pl-cpu_ocd)
+        + [pl-cpu_oc](#pl-cpu_oc)
+        + [pl-cpu_gov](#pl-cpu_gov)
+        + [pl-cpu_temp](#pl-cpu_temp)
 * [Credits](#Credits)
 * [TODO](#Todo)
 
@@ -80,7 +81,7 @@ If you have the time and the ability to contribute then your conributions will b
 pishlib contains many functions to query and control a Raspberry Pi from your script and are grouped by functionality .
 
 ### Memory Functions
-#### mem_is
+#### pl-mem_is
 Suite of functions eg. mem_is256m, mem_is1g etc. which return 0 (true) if the Pi has xxx[m|g] memory otherwise returns 1 (false). Example:
 ```shell
 if mem_is256m; then
@@ -88,14 +89,14 @@ if mem_is256m; then
 fi
 ```
 
-#### mem_total
+#### pl-mem_total
 Returns total system memory (less GPU memory allocated) in Megabytes (Mb). Example:
 ```shell
 sys_ram = $(mem_total)
 echo $sys_ram 
 ```
 
-#### mem_greater
+#### pl-mem_greater
 Returns 0 (true) if the total system ram (less GPU memory allocated) is greater than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
 if [[ $(mem_greater 512) ]]; then
@@ -105,7 +106,7 @@ else
 fi
 ```
 
-#### mem_less
+#### pl-mem_less
 Returns 0 (true) if the total system ram (less GPU memory allocated) is less than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
 if [[ $(mem_less 512) ]]; then
@@ -115,17 +116,17 @@ else
 fi
 ```
 
-#### mem_rdisk
+#### pl-mem_rdisk
 Setups up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
 
 **Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
 
-#### mem_zswap
+#### pl-mem_zswap
 
-#### mem_swap
+#### pl-mem_swap
 
 ### GPU Functions
-#### gpu_mem
+#### pl-gpu_mem
 Function to report or set the amount of memory (in megabytes) to reserve for the exclusive use of the GPU: the remaining memory is allocated to the ARM CPU.
 
 Without a parameter gpu_mem returns the current GPU memory allocation in megabytes.
@@ -140,51 +141,53 @@ With `max` as the parameter sets the GPU memory to recommended max value for the
 
 **Note:** On the Raspberry Pi 4 the 3D component of the GPU has its own memory management unit (MMU), and does not use memory from the gpu_mem allocation. Instead memory is allocated dynamically within Linux. This may allow a smaller value to be specified for gpu_mem on the Pi 4, compared to previous models.
 
-#### gpu_mem256
+#### pl-gpu_mem256
 Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 256MB of memory. (It is ignored if memory size is not 256MB). This overrides gpu_mem.
 
 Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
-#### gpu_mem512
+#### pl-gpu_mem512
 Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 512MB of memory. (It is ignored if memory size is not 512MB). This overrides gpu_mem.
 
 Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
-#### gpu_mem1024
+#### pl-gpu_mem1024
 Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 1024MB of memory. (It is ignored if memory size is not 1024MB). This overrides gpu_mem.
 
 Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
+#### pl-gpu_temp
+
 ### CPU functions
-#### cpu_id
-#### cpu_max
-#### cpu_min
-#### cpu_ocd
-#### cpu_oc
-#### cpu_gov
-#### cpu_temp
+#### pl-cpu_id
+#### pl-cpu_max
+#### pl-cpu_min
+#### pl-cpu_ocd
+#### pl-cpu_oc
+#### pl-cpu_gov
+#### pl-cpu_temp
 
 ### GPIO functions
 
 ### Model functions
-#### model_is4
-#### model_is3
-#### model_is2
-#### model_is1
-#### model_isa
-#### model_isb
-#### model isplus
-#### model_iscompute
-#### model_iszero
-#### model_greater
-#### model_less
-#### model_get
-#### model_has_bt
-#### model_has_wifi
-#### model_has_net
-#### model_hascsi
-#### model_is32bit
-#### model_is64bit
+#### pl-model_is4
+#### pl-model_is3
+#### pl-model_is2
+#### pl-model_is1
+#### pl-model_isa
+#### pl-model_isb
+#### pl-model isplus
+#### pl-model_iscompute
+#### pl-model_iszero
+#### pl-model_greater
+#### pl-model_less
+#### pl-model_get
+#### pl-model_has_bt
+#### pl-model_has_wifi
+#### pl-model_has_net
+#### pl-model_hascsi
+#### pl-model_is32bit
+#### pl-model_is64bit
 
 ## Credits
 * Russell Armstrong - original author and project maintainer
@@ -192,62 +195,62 @@ Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot dri
 ## TODO
 * [ ] Memory functions:
     - [x] Identify how much total RAM the system has:
-        + [x] **mem_is256m**
-        + [x] **mem_is512m**
-        + [x] **mem_is1g**
-        + [x] **mem_is2g**
-        + [x] **mem_is4g**
-        + [x] **mem_is8g**
-        + [x] **mem_total**
-        + [x] **mem_greater**
-        + [x] **mem_less**
-    - [ ] **mem_rdisk**
+        + [x] **pl-mem_is256m**
+        + [x] **pl-mem_is512m**
+        + [x] **pl-mem_is1g**
+        + [x] **pl-mem_is2g**
+        + [x] **pl-mem_is4g**
+        + [x] **pl-mem_is8g**
+        + [x] **pl-mem_total**
+        + [x] **pl-mem_greater**
+        + [x] **pl-mem_less**
+    - [ ] **pl-mem_rdisk**
         + [ ] complete spec'ing out function README.md
-    - [ ] **mem_zswap**
+    - [ ] **pl-mem_zswap**
         + [ ] investigate zswap
         + [ ] spec out zswap
-    - [ ] **mem_swap**
+    - [ ] **pl-mem_swap**
         + [ ] investigate swapiness
         + [ ] spec out swapiness
 * [ ] GPU functions:
-    - [ ] **gpu_mem**
+    - [ ] **pl-gpu_mem**
         + [ ] insert table into README.md of default values for each pi model
         + [ ] insert table into README.md of max recommended values for eachpi model
         + [ ] insert examples for each invocation
-    - [ ] **gpu_mem256**
+    - [ ] **pl-gpu_mem256**
         + [ ] insert example for invocation
-    - [ ] **gpu_mem512**
+    - [ ] **pl-gpu_mem512**
         + [ ] insert example for invocation
-    - [ ] **gpu_mem1024**
+    - [ ] **pl-gpu_mem1024**
         + [ ] insert example for invocation
-    - [ ] **gpu_temp**
+    - [ ] **pl-gpu_temp**
 * [ ] CPU functions:
     - [ ] Spec out functions in README.md
-    - [ ] **cpu_id**
-    - [ ] **cpu_max**
-    - [ ] **cpu_min**
-    - [ ] **cpu_ocd**
-    - [ ] **cpu_oc**
-    - [ ] **cpu_gov**
-    - [ ] **cpu_temp**
+    - [ ] **pl-cpu_id**
+    - [ ] **pl-cpu_max**
+    - [ ] **pl-cpu_min**
+    - [ ] **pl-cpu_ocd**
+    - [ ] **pl-cpu_oc**
+    - [ ] **pl-cpu_gov**
+    - [ ] **pl-cpu_temp**
 * [ ] GPIO functions:
     - [ ] Spec out functions in README.md
 * [ ] Model functions:
-    - [ ] **model_is4**
-    - [ ] **model_is3**
-    - [ ] **model_is2**
-    - [ ] **model_is1**
-    - [ ] **model_isa**
-    - [ ] **model_isb**
-    - [ ] **model isplus**
-    - [ ] **model_iscompute**
-    - [ ] **model_iszero**
-    - [ ] **model_greater**
-    - [ ] **model_less**
-    - [ ] **model_get**
-    - [ ] **model_has_bt**
-    - [ ] **model_has_wifi**
-    - [ ] **model_has_net**
-    - [ ] **model_is32bit**
-    - [ ] **model_is64bit**
-    - [ ] **model_hascsi**
+    - [ ] **pl-model_is4**
+    - [ ] **pl-model_is3**
+    - [ ] **pl-model_is2**
+    - [ ] **pl-model_is1**
+    - [ ] **pl-model_isa**
+    - [ ] **pl-model_isb**
+    - [ ] **pl-model isplus**
+    - [ ] **pl-model_iscompute**
+    - [ ] **pl-model_iszero**
+    - [ ] **pl-model_greater**
+    - [ ] **pl-model_less**
+    - [ ] **pl-model_get**
+    - [ ] **pl-model_has_bt**
+    - [ ] **pl-model_has_wifi**
+    - [ ] **pl-model_has_net**
+    - [ ] **pl-model_is32bit**
+    - [ ] **pl-model_is64bit**
+    - [ ] **pl-model_hascsi**
