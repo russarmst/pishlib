@@ -11,33 +11,27 @@
 #
 
 mem_is256m () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -lt 262144 ]]
+	[[ $(mem_total) -lt 262144 ]]
 }
 
 mem_is512m () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -lt 524288 ]] && [[ $mem -gt 262144 ]]
+	[[ $(mem_total) -lt 524288 ]] && [[ $(mem_total) -gt 262144 ]]
 }
 
 mem_is1g () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -lt 1048576 ]] && [[ $mem -gt 524288 ]]
+	[[ $(mem_total) -lt 1048576 ]] && [[ $(mem_total) -gt 524288 ]]
 }
 
 mem_is2g () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -lt 2097152 ]] && [[ $mem -gt 1048576 ]]
+	[[ $(mem_total) -lt 2097152 ]] && [[ $(mem_total) -gt 1048576 ]]
 }
 
 mem_is4g () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -lt 4194304 ]] && [[ $mem -gt 2097152 ]]
+	[[ $(mem_total) -lt 4194304 ]] && [[ $(mem_total) -gt 2097152 ]]
 }
 
 mem_is8g () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -lt 8388608 ]] && [[ $mem -gt 4194304 ]]
+	[[ $(mem_total) -lt 8388608 ]] && [[ $(mem_total) -gt 4194304 ]]
 }
 
 mem_total () {
@@ -46,11 +40,9 @@ mem_total () {
 }
 
 mem_greater () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -gt $1 ]]
+	[[ $(mem_total) -gt $1 ]]
 }
 
 mem_less () {
-	mem=$(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
-	[[ $mem -lt $1 ]]
+	[[ $(mem_total) -lt $1 ]]
 }
