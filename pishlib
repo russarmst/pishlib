@@ -59,8 +59,63 @@ pl-mem_less () {
 ##               ##
 ###################
 
+pl-gpu_mem() {
+    
+    case $1 in
+
+      "")
+        pl-gpu_mem_get
+        ;;
+
+      default)
+        if [[ pl-model_is1 ]] | [[ pl-model_iszero ]]; then
+            pl-gpu_mem=64
+        else
+            pl-gpu_mem=76
+        fi
+        pl-gpu_mem_set $gpu_mem
+        ;;
+
+      max)
+        if [[ pl-mem_is256m ]]; then
+            pl-gpu_mem=128
+        elif [[ pl-mem_is512m ]]; then
+            pl-gpu_mem=384
+        elif [[ pl-mem_greater 512 ]]; then
+            pl-gpu_mem=512
+        fi
+        pl-gpu_mem_set $gpu_mem
+        ;;
+
+      *)
+        return 1
+        ;;
+    esac
+}
+
+pl-gpu_mem_get() {
+    if [ -f "/path/to/vcgencmd" ; then #TODO: figure out path to vcgencmd
+        gpu_mem=`vcgencmd get_mem gpu | sed 's/[^0-9]*//g'`
+    else
+        gpu_mem=`sed 's/[^0-9]*//g' /boot/config.txt`
+    fi
+    echo $(gpu_mem)
+}
+
+pl-gpu_mem_set() {
+    sed -ri "s/gpu_mem=[0-9]+/gpu_mem=$1/g" /boot/config.txt
+}
+
 #####################
 ##                 ##
 ## Model functions ##
 ##                 ##
 #####################
+
+pl-model_is1() {
+
+}
+
+pl-model_iszero() {
+
+}
