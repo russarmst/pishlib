@@ -9,6 +9,11 @@
 #   Released under the MIT licence
 #   Copyright (c) 2020 Russell Armstrong
 #
+#######################
+##                   ##
+## Memmory functions ##
+##                   ##
+#######################
 
 pl-mem_is256m () {
 	[[ $(pl-mem_total) -lt 262144 ]]
@@ -47,3 +52,14 @@ pl-mem_less () {
 	[[ $(pl-mem_total) -lt $1 ]]
 }
 
+###################
+##               ##
+## GPU functions ##
+##               ##
+###################
+
+#####################
+##                 ##
+## Model functions ##
+##                 ##
+#####################
