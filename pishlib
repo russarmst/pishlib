@@ -1,14 +1,15 @@
 #
 # pishlib
 #
-#   Library of helper functions for shell scripts on the Raspberry Pi
-#   range computers.
+## Library of helper functions for shell scripts on the Raspberry Pi
+## range of computers.
+##
+## Add '. /path/to/pishlib' to your shell script to use the functions.
+##
+## Released under the MIT licence
+## Copyright (c) 2020 Russell Armstrong
 #
-#   Add '. /path/to/pishlib' to your shell script to use the functions.
-#
-#   Released under the MIT licence
-#   Copyright (c) 2020 Russell Armstrong
-#
+
 #######################
 ##                   ##
 ## Memmory functions ##
@@ -16,40 +17,40 @@
 #######################
 
 pl-mem_is256m () {
-	[[ $(pl-mem_total) -lt 262144 ]]
+    [[ $(pl-mem_total) -lt 262144 ]]
 }
 
 pl-mem_is512m () {
-	[[ $(pl-mem_total) -lt 524288 ]] && [[ $(pl-mem_total) -gt 262144 ]]
+    [[ $(pl-mem_total) -lt 524288 ]] && [[ $(pl-mem_total) -gt 262144 ]]
 }
 
 pl-mem_is1g () {
-	[[ $(pl-mem_total) -lt 1048576 ]] && [[ $(pl-mem_total) -gt 524288 ]]
+    [[ $(pl-mem_total) -lt 1048576 ]] && [[ $(pl-mem_total) -gt 524288 ]]
 }
 
 pl-mem_is2g () {
-	[[ $(pl-mem_total) -lt 2097152 ]] && [[ $(pl-mem_total) -gt 1048576 ]]
+    [[ $(pl-mem_total) -lt 2097152 ]] && [[ $(pl-mem_total) -gt 1048576 ]]
 }
 
 pl-mem_is4g () {
-	[[ $(pl-mem_total) -lt 4194304 ]] && [[ $(pl-mem_total) -gt 2097152 ]]
+    [[ $(pl-mem_total) -lt 4194304 ]] && [[ $(pl-mem_total) -gt 2097152 ]]
 }
 
 pl-mem_is8g () {
-	[[ $(pl-mem_total) -lt 8388608 ]] && [[ $(pl-mem_total) -gt 4194304 ]]
+    [[ $(pl-mem_total) -lt 8388608 ]] && [[ $(pl-mem_total) -gt 4194304 ]]
 }
 
 pl-mem_total () {
-	mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
-	echo $(( $mem / 1024 ))
+    mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+    echo $(( $mem / 1024 ))
 }
 
 pl-mem_greater () {
-	[[ $(pl-mem_total) -gt $1 ]]
+    [[ $(pl-mem_total) -gt $1 ]]
 }
 
 pl-mem_less () {
-	[[ $(pl-mem_total) -lt $1 ]]
+    [[ $(pl-mem_total) -lt $1 ]]
 }
 
 ###################
