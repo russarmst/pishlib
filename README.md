@@ -127,15 +127,45 @@ Setups up a ramdisk for temporary files to preserve SD card life by preventing S
 
 ### GPU Functions
 #### pl-gpu_mem
-Function to report or set the amount of memory (in megabytes) to reserve for the exclusive use of the GPU: the remaining memory is allocated to the ARM CPU.
+Function to report or set the amount of memory (in megabytes) to reserve for the exclusive use of the GPU, the remaining memory is allocated to the ARM CPU.
 
-Without a parameter gpu_mem returns the current GPU memory allocation in megabytes.
+```shell
+pl-gpu_mem
+```
+Without a parameter pl-gpu_mem returns the current GPU memory allocation in megabytes. 
 
-With an integer as the parameter (in megabytes) sets the GPU memory to the integer.
+**Note:** if your distribution doesn't include the `vcgencmd` program (included with Raspberry Pi OS) or you haven't installed it, the amount of GPU Memory reported will that configured in `/boot/config.txt`. If the `gpu_mem` in `/boot/config.txt` has been changed since the last reboot, the amount of GPU Memory reported will be inaccurate until after the next reboot. With `vcgencmd` in the path the amount of GPU Memory reported will always be accurate. 
 
-With `default` as the parameter sets the GPU memory to default value for the Raspberry Pi model.
+```shell
+pl-gpu_mem 128
+```
 
-With `max` as the parameter sets the GPU memory to recommended max value for the Raspberry Pi model.
+Sets the GPU memory to the integer megabytes.
+
+```shell
+pl-gpu_mem default
+```
+
+The GPU memory is set the following values:
+
+| Pi Model         | gpu_mem default value |
+|------------------|-----------------------|
+| Pi 1             | 64 |
+| Zero             | 64 |
+| All other models | 76 |
+
+
+```shell
+pl-gpu_mem max
+```
+
+The GPU memory is set to the recommended max value depending on the total system memory as follows:
+
+| Total RAM      | gpu_mem recommended maximum |
+|----------------|-----------------------------|
+| 256MB          | 128 |
+| 512MB          | 384 |
+| 1GB or greater | 512 |
 
 **Note:** The minimum value is 16, however this disables certain GPU features.
 
@@ -152,7 +182,7 @@ Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspb
 Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
 #### pl-gpu_mem1024
-Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 1024MB of memory. (It is ignored if memory size is not 1024MB). This overrides gpu_mem.
+Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 1024MB or greater of memory. (It is ignored if memory size is not 1024MB). This overrides gpu_mem.
 
 Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
 
@@ -213,10 +243,10 @@ Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot dri
         + [ ] investigate swapiness
         + [ ] spec out swapiness
 * [ ] GPU functions:
-    - [ ] **pl-gpu_mem**
-        + [ ] insert table into README.md of default values for each pi model
-        + [ ] insert table into README.md of max recommended values for eachpi model
-        + [ ] insert examples for each invocation
+    - [x] **pl-gpu_mem**
+        + [x] insert table into README.md of default values for each pi model
+        + [x] insert table into README.md of max recommended values for eachpi model
+        + [x] insert examples for each invocation
     - [ ] **pl-gpu_mem256**
         + [ ] insert example for invocation
     - [ ] **pl-gpu_mem512**
