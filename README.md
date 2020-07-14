@@ -16,7 +16,7 @@ when you can write this:
 ```shell
 . /path/to/pishlib
 
-if mem_is4g; then
+if pl-mem_is4g; then
     echo 'Your Pi has 4G of total system ram.'
 fi
 ```
@@ -92,14 +92,14 @@ fi
 #### pl-mem_total
 Returns total system memory (less GPU memory allocated) in Megabytes (Mb). Example:
 ```shell
-sys_ram = $(mem_total)
+sys_ram = $(pl-mem_total)
 echo $sys_ram 
 ```
 
 #### pl-mem_greater
 Returns 0 (true) if the total system ram (less GPU memory allocated) is greater than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
-if [[ $(mem_greater 512) ]]; then
+if [[ $(pl-mem_greater 512) ]]; then
     echo 'Your Pi has more than 512kB of system memory.'
 else
     echo 'Your Pi has less than 512kB of system memory.'
@@ -109,7 +109,7 @@ fi
 #### pl-mem_less
 Returns 0 (true) if the total system ram (less GPU memory allocated) is less than the supplied parameter, otherwise returns 1 (false). Example:
 ```shell
-if [[ $(mem_less 512) ]]; then
+if [[ $(pl-mem_less 512) ]]; then
     echo 'Your Pi has less than 512kB of system memory.'
 else
     echo ' Your Pi has more than 512kB of system memory.'
