@@ -81,7 +81,7 @@ pl-gpu_mem() {
             pl-gpu_mem=128
         elif [[ pl-mem_is512m ]]; then
             pl-gpu_mem=384
-        elif [[ pl-mem_greater 512 ]]; then
+        elif [[ $(pl-mem_greater 512) ]]; then
             pl-gpu_mem=512
         fi
         pl-gpu_mem_set $gpu_mem
@@ -113,9 +113,9 @@ pl-gpu_mem_set() {
 #####################
 
 pl-model_is1() {
-
+	return 0
 }
 
 pl-model_iszero() {
-
+	return 0
 }
