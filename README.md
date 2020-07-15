@@ -84,7 +84,7 @@ pishlib contains many functions to query and control a Raspberry Pi from your sc
 #### pl-mem_is
 Suite of functions eg. mem_is256m, mem_is1g etc. which return 0 (true) if the Pi has xxx[m|g] memory otherwise returns 1 (false). Example:
 ```shell
-if mem_is256m; then
+if pl-mem_is256m; then
     echo 'Your Pi has 256k of total system ram'
 fi
 ```
