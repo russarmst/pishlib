@@ -3,6 +3,11 @@
 ## Introduction
 The aim of the **pi** **sh**ell **lib**rary (pishlib) is the Swiss Army Knife of shell scripting for the Pi range of computers by implementing elegant functions that make script writing easier, more robust and fun(?).
 
+**Note:** For the time being this code should be regarded as Alpha where:
+* changes to the code and function names may break scripts using it
+* the code contains bugs
+* changes to the code causes regressions
+
 Why write this:
 ```shell
 sys_mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
@@ -16,7 +21,7 @@ when you can write this:
 ```shell
 . /path/to/pishlib
 
-if pl-mem_is4g; then
+if pl-sys-mem =4096; then
     echo 'Your Pi has 4G of total system ram.'
 fi
 ```
@@ -28,13 +33,13 @@ fi
 * [Contributing](#Contributing)
 * [Functions](#Functions)
     - [Memory Functions](#Memory-Functions)
-        + [pl-mem_is](#pl-mem_is)
-        + [pl-mem_total](#pl-mem_total)
-        + [pl-mem_greater](#pl-mem_greater)
-        + [pl-mem_less](#pl-mem_less) 
-        + [pl-mem_rdisk](#pl-mem_rdisk) 
-        + [pl-mem_zswap](#pl-mem_zswap) 
-        + [pl-mem_swap](#pl-mem_swap) 
+        + [pl-sys_mem](#pl-sys_mem)
+        + [pl-sys_mem lt xxxx](#pl-sys_mem-lt-xxxx)
+        + [pl-sys_mem gt xxxx](#pl-sys_mem-gt-xxxx) 
+        + [pl-sys_mem eq xxxx](#pl-sys_mem-eq-xxxx) 
+        + [pl-sys_mem_rdisk](#pl-sys_mem_rdisk) 
+        + [pl-sys_mem_zswap](#pl-sys_mem_zswap) 
+        + [pl-sys_mem_swap](#pl-sys_mem_swap) 
     - [GPU Functions](#gpu-Functions)
         + [pl-gpu_mem](#pl-gpu_mem) 
         + [pl-gpu_mem256](#pl-gpu_mem256) 
@@ -81,49 +86,58 @@ If you have the time and the ability to contribute then your conributions will b
 pishlib contains many functions to query and control a Raspberry Pi from your script and are grouped by functionality .
 
 ### Memory Functions
-#### pl-mem_is
-Suite of functions eg. pl-mem_is256m, pl-mem_is1g etc. which return 0 (true) if the Pi has xxx[m|g] memory otherwise returns 1 (false). Example:
+#### pl-sys_mem
+Returns the amount of system memory as an intger in Mb.
+
+Example:
 ```shell
-if pl-mem_is256m; then
-    echo 'Your Pi has 256k of total system ram'
+echo "Your Pi has $(pl-sys_mem)Mb of system memory."
+```
+
+#### pl-sys_mem lt xxxx
+Returns a boolean depending on the truthiness if the system memory is less than supplied integer (xxxx) in Mb.
+
+Example:
+```shell
+if [[ pl-sys_mem lt 512 ]]; then
+    echo "Your Pi doesn't have the meet the minimum amount of system memory to run this programme."
+    exit
 fi
 ```
 
-#### pl-mem_total
-Returns total system memory (less GPU memory allocated) in Megabytes (Mb). Example:
-```shell
-sys_ram = $(pl-mem_total)
-echo $sys_ram 
-```
+#### pl-sys_mem gt xxxx
+Returns a boolean depending on the truthiness if the system memory is greater than supplied integer (xxxx) in Mb.
 
-#### pl-mem_greater
-Returns 0 (true) if the total system ram (less GPU memory allocated) is greater than the supplied parameter, otherwise returns 1 (false). Example:
+Example:
 ```shell
-if [[ $(pl-mem_greater 512) ]]; then
-    echo 'Your Pi has more than 512kB of system memory.'
+if [[ pl-sys_mem gt 512 ]]; then
+    echo "Your Pi meets the minimum amount of system memory to run this programme."
+    exit
 else
-    echo 'Your Pi has less than 512kB of system memory.'
+    echo "Your Pi doesn't have the meet the minimum amount of system memory to run this programme."
+    exit
 fi
 ```
 
-#### pl-mem_less
-Returns 0 (true) if the total system ram (less GPU memory allocated) is less than the supplied parameter, otherwise returns 1 (false). Example:
+#### pl-sys_mem eq xxxx
+Returns a boolean depending on the truthiness if the system memory is equal to the supplied integer (xxxx) in Mb.
+
 ```shell
-if [[ $(pl-mem_less 512) ]]; then
-    echo 'Your Pi has less than 512kB of system memory.'
-else
-    echo ' Your Pi has more than 512kB of system memory.'
-fi
+    if [[ pl-sys_mem eq 1024 ]]; then
+        echo "Your Pi has 1024Mb of system memory."
 ```
 
-#### pl-mem_rdisk
-Setups up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
+#### pl-sys_mem_rdisk
+Still todo. Intends to setup up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
 
 **Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
 
-#### pl-mem_zswap
+#### pl-sys_mem_zswap
+Still todo.
 
-#### pl-mem_swap
+#### pl-sys_mem_swap
+Still todo.
+
 
 ### GPU Functions
 #### pl-gpu_mem
@@ -170,6 +184,16 @@ The GPU memory is set to the recommended max value depending on the total system
 **Note:** The minimum value is 16, however this disables certain GPU features.
 
 **Note:** On the Raspberry Pi 4 the 3D component of the GPU has its own memory management unit (MMU), and does not use memory from the gpu_mem allocation. Instead memory is allocated dynamically within Linux. This may allow a smaller value to be specified for gpu_mem on the Pi 4, compared to previous models.
+
+
+pl-gpu_mem
+
+pl-gpu_mem default
+pl-gpu_mem max
+pl-gpu_mem 128
+
+pl-gpu_mem <512
+pl-gpu_mem >512
 
 #### pl-gpu_mem256
 Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 256MB of memory. (It is ignored if memory size is not 256MB). This overrides gpu_mem.
@@ -234,12 +258,12 @@ Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot dri
         + [x] **pl-mem_total**
         + [x] **pl-mem_greater**
         + [x] **pl-mem_less**
-    - [ ] **pl-mem_rdisk**
+    - [ ] **pl-sys_mem_rdisk**
         + [ ] complete spec'ing out function README.md
-    - [ ] **pl-mem_zswap**
+    - [ ] **pl-sys_mem_zswap**
         + [ ] investigate zswap
         + [ ] spec out zswap
-    - [ ] **pl-mem_swap**
+    - [ ] **pl-sys_mem_swap**
         + [ ] investigate swapiness
         + [ ] spec out swapiness
 * [ ] GPU functions:
