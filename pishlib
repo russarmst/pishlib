@@ -17,27 +17,27 @@
 #######################
 
 pl-mem_is256m () {
-    [[ $(pl-mem_total) -lt 262144 ]]
+    [[ $(pl-mem_total) -lt 256 ]]
 }
 
 pl-mem_is512m () {
-    [[ $(pl-mem_total) -lt 524288 ]] && [[ $(pl-mem_total) -gt 262144 ]]
+    [[ $(pl-mem_total) -lt 512 ]] && [[ $(pl-mem_total) -gt 256 ]]
 }
 
 pl-mem_is1g () {
-    [[ $(pl-mem_total) -lt 1048576 ]] && [[ $(pl-mem_total) -gt 524288 ]]
+    [[ $(pl-mem_total) -lt 1024 ]] && [[ $(pl-mem_total) -gt 512 ]]
 }
 
 pl-mem_is2g () {
-    [[ $(pl-mem_total) -lt 2097152 ]] && [[ $(pl-mem_total) -gt 1048576 ]]
+    [[ $(pl-mem_total) -lt 2048 ]] && [[ $(pl-mem_total) -gt 1024 ]]
 }
 
 pl-mem_is4g () {
-    [[ $(pl-mem_total) -lt 4194304 ]] && [[ $(pl-mem_total) -gt 2097152 ]]
+    [[ $(pl-mem_total) -lt 4096 ]] && [[ $(pl-mem_total) -gt 2048 ]]
 }
 
 pl-mem_is8g () {
-    [[ $(pl-mem_total) -lt 8388608 ]] && [[ $(pl-mem_total) -gt 4194304 ]]
+    [[ $(pl-mem_total) -lt 8192 ]] && [[ $(pl-mem_total) -gt 4096 ]]
 }
 
 pl-mem_total () {
