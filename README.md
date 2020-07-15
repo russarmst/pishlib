@@ -5,7 +5,7 @@ The aim of the **pi** **sh**ell **lib**rary (pishlib) is the Swiss Army Knife of
 
 Why write this:
 ```shell
-sys_mem = $(cat /proc/meminfo |grep MemTotal | awk '{print $2}')
+sys_mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
 
 if [[ $sys_mem -lt 4194304 ]] && [[ $sys_mem -gt 2097152 ]]; then
     echo 'Your Pi has 4G of total system ram.'
@@ -82,7 +82,7 @@ pishlib contains many functions to query and control a Raspberry Pi from your sc
 
 ### Memory Functions
 #### pl-mem_is
-Suite of functions eg. mem_is256m, mem_is1g etc. which return 0 (true) if the Pi has xxx[m|g] memory otherwise returns 1 (false). Example:
+Suite of functions eg. pl-mem_is256m, pl-mem_is1g etc. which return 0 (true) if the Pi has xxx[m|g] memory otherwise returns 1 (false). Example:
 ```shell
 if pl-mem_is256m; then
     echo 'Your Pi has 256k of total system ram'
