@@ -113,40 +113,51 @@ __mem_swap() {
 ###################
 
 pl-gpu_mem() {
-    
-    case $1 in
 
-      "")
-        pl-gpu_mem_get
-        ;;
+  case $1 in
 
-      default)
-        if [[ pl-model_is1 ]] | [[ pl-model_iszero ]]; then
-            pl-gpu_mem=64
-        else
-            pl-gpu_mem=76
-        fi
-        pl-gpu_mem_set $gpu_mem
-        ;;
+    "")
+      __gpu_get
+      ;;
 
-      max)
-        if [[ pl-mem_is256m ]]; then
-            pl-gpu_mem=128
-        elif [[ pl-mem_is512m ]]; then
-            pl-gpu_mem=384
-        elif [[ $(pl-mem_greater 512) ]]; then
-            pl-gpu_mem=512
-        fi
-        pl-gpu_mem_set $gpu_mem
-        ;;
+    default)
+      if [[ $(pl-model is1) ]] | [[ $(pl-model isZero) ]]; then
+          gpu_mem=64
+      else
+          gpu_mem=76
+      fi
+      __gpu_set $gpu_mem
+      ;;
 
-      *)
+    max)
+      if [[ $(pl-sys_mem is256m) ]]; then
+          gpu_mem=128
+      elif [[ $(pl-sys_mem is512m) ]]; then
+          gpu_mem=384
+      elif [[ $(pl-mem_greater 512) ]]; then
+          gpu_mem=512
+      fi
+      __gpu_set $gpu_mem
+      ;;
+
+    *)
+      if [[ $1 -lt 16 ]] | [[ $1 -gt 1024 ]]; then
+        # setting less than 16 may prevent pi from booting
+        # setting more than 1024 doesn't make sense
         return 1
-        ;;
-    esac
+      elif [[ $1 -gt 15 ]] & [[ $1 -lt 1025 ]]; then
+        __gpu_set $1
+        return $?
+      else
+        return 1
+      fi
+      ;;
+  esac
 }
 
-pl-gpu_mem_get() {
+__gpu_get() {
+  # TODO: this needs investigating and testing.
+  # TODO: What if gpu_mem doesn't exist in config.txt?
     if [ -f "/usr/bin/vcgencmd" ; then
         gpu_mem=`vcgencmd get_mem gpu | sed 's/[^0-9]*//g'`
     else
@@ -155,7 +166,9 @@ pl-gpu_mem_get() {
     echo $(gpu_mem)
 }
 
-pl-gpu_mem_set() {
+__gpu_set() {
+  # TODO: this needs testing.
+  # TODO: Put in logic to incase gpu_mem doesn't exist in config.txt 
     sed -ri "s/gpu_mem=[0-9]+/gpu_mem=$1/g" /boot/config.txt
 }
 
