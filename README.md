@@ -21,7 +21,7 @@ when you can write this:
 ```shell
 . /path/to/pishlib
 
-if pl-sys-mem =4096; then
+if pl-sys-mem is4g; then
     echo 'Your Pi has 4G of total system ram.'
 fi
 ```
@@ -36,10 +36,11 @@ fi
         + [pl-sys_mem](#pl-sys_mem)
         + [pl-sys_mem lt xxxx](#pl-sys_mem-lt-xxxx)
         + [pl-sys_mem gt xxxx](#pl-sys_mem-gt-xxxx) 
-        + [pl-sys_mem eq xxxx](#pl-sys_mem-eq-xxxx) 
-        + [pl-sys_mem_rdisk](#pl-sys_mem_rdisk) 
-        + [pl-sys_mem_zswap](#pl-sys_mem_zswap) 
-        + [pl-sys_mem_swap](#pl-sys_mem_swap) 
+        + [pl-sys_mem eq xxxx](#pl-sys_mem-eq-xxxx)
+        + [pl-sys_mem isxxx[m|g]](#pl-sys_mem-isxxx[m|g])
+        + [pl-sys_mem ramdisk](#pl-sys_mem-ramdisk) 
+        + [pl-sys_mem zswap](#pl-sys_mem-zswap) 
+        + [pl-sys_mem swap](#pl-sys_mem-swap) 
     - [GPU Functions](#gpu-Functions)
         + [pl-gpu_mem](#pl-gpu_mem) 
         + [pl-gpu_mem256](#pl-gpu_mem256) 
@@ -122,20 +123,30 @@ fi
 #### pl-sys_mem eq xxxx
 Returns a boolean depending on the truthiness if the system memory is equal to the supplied integer (xxxx) in Mb.
 
+Example:
 ```shell
     if [[ pl-sys_mem eq 1024 ]]; then
         echo "Your Pi has 1024Mb of system memory."
 ```
 
-#### pl-sys_mem_rdisk
+#### pl-sys_mem isxxx[m|g]
+Returns a boolean if the system memory is equal to xxx[m|g]. Valid values for xxx are 256m, 512m, 1g, 2g, 4g, or 8g.
+
+Example:
+```shell
+    if [[ pl-sys_mem is1g ]]; then
+        echo "Your Pi has 1024Mb of system memory."
+```
+
+#### pl-sys_mem ramdisk
 Still todo. Intends to setup up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
 
 **Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
 
-#### pl-sys_mem_zswap
+#### pl-sys_mem zswap
 Still todo.
 
-#### pl-sys_mem_swap
+#### pl-sys_mem swap
 Still todo.
 
 
@@ -150,29 +161,27 @@ Without a parameter pl-gpu_mem returns the current GPU memory allocation in mega
 
 **Note:** if your distribution doesn't include the `vcgencmd` program (included with Raspberry Pi OS) or you haven't installed it, the amount of GPU Memory reported will that configured in `/boot/config.txt`. If the `gpu_mem` in `/boot/config.txt` has been changed since the last reboot, the amount of GPU Memory reported will be inaccurate until after the next reboot. With `vcgencmd` in the path the amount of GPU Memory reported will always be accurate. 
 
+#### pl-gpu_mem xxx
+Sets the GPU memory to the integer megabytes. Example:
+
 ```shell
 pl-gpu_mem 128
 ```
 
-Sets the GPU memory to the integer megabytes.
-
-```shell
-pl-gpu_mem default
-```
-
+#### pl-gpu_mem default
 The GPU memory is set the following values:
-
 | Pi Model         | gpu_mem default value |
 |------------------|-----------------------|
 | Pi 1             | 64 |
 | Zero             | 64 |
 | All other models | 76 |
 
-
+Example:
 ```shell
-pl-gpu_mem max
+pl-gpu_mem default
 ```
 
+#### pl-gpu_mem max
 The GPU memory is set to the recommended max value depending on the total system memory as follows:
 
 | Total RAM      | gpu_mem recommended maximum |
@@ -185,32 +194,62 @@ The GPU memory is set to the recommended max value depending on the total system
 
 **Note:** On the Raspberry Pi 4 the 3D component of the GPU has its own memory management unit (MMU), and does not use memory from the gpu_mem allocation. Instead memory is allocated dynamically within Linux. This may allow a smaller value to be specified for gpu_mem on the Pi 4, compared to previous models.
 
-
-pl-gpu_mem
-
-pl-gpu_mem default
+Example:
+```shell
 pl-gpu_mem max
-pl-gpu_mem 128
+```
 
-pl-gpu_mem <512
-pl-gpu_mem >512
+#### pl-gpu_mem gt xxx
+Tests if the memory allocated to the GPU is **Greater Than** than xxx which should be an integer in Megabytes.
 
-#### pl-gpu_mem256
-Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 256MB of memory. (It is ignored if memory size is not 256MB). This overrides gpu_mem.
+```shell
+    min_gpu_mem=128
+    if [[ pl-gpu_mem gt min_gpu_mem ]]; then
+      echo "Your system has more than the minimum amount of GPU memory allocated."
+    fi
+```
 
-Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
+#### pl-gpu_mem lt xxx
+Tests if the memory allocated to the GPU is **Less Than** than xxx which should be an integer in Megabytes.
 
-#### pl-gpu_mem512
-Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 512MB of memory. (It is ignored if memory size is not 512MB). This overrides gpu_mem.
+```shell
+    min_gpu_mem=128
+    if [[ pl-gpu_mem lt min_gpu_mem ]]; then
+      echo "Your system has less than the minimum amount of GPU memory allocated."
+      exit
+    fi
+```
 
-Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
+#### pl-gpu_mem set256 xxx
+Sets the GPU memory (in megabytes) to xxx which should be an integer in Megabytes for Raspberry Pis with 256MB of memory. (It is ignored if memory size is not 256MB). This inserts or overwrites gpu_mem_256=xxx in /boot/config.txt. This overrides the gpu_mem setting in /boot/config.txx.
 
-#### pl-gpu_mem1024
-Sets the GPU memory (in megabytes) to the supplied parameter (integer) for Raspberry Pis with 1024MB or greater of memory. (It is ignored if memory size is not 1024MB). This overrides gpu_mem.
+Setting this will allow swapping the boot drive between Pis with different amounts of RAM without having to edit /boot/config.txt each time.
 
-Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
+#### pl-gpu_mem set512 xxx
+Sets the GPU memory (in megabytes) to xxx which should be an integer in Megabytes for Raspberry Pis with 512MB of memory. (It is ignored if memory size is not 512MB). This inserts or overwrites gpu_mem_512=xxx in /boot/config.txt. This overrides the gpu_mem setting in /boot/config.txx.
 
-#### pl-gpu_temp
+Setting this will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
+
+#### pl-gpu_mem set1024 xxx
+Sets the GPU memory (in megabytes) to xxx which should be an integer in Megabytes for Raspberry Pis with 1024MB of memory. (It is ignored if memory size is not 1024MB). This inserts or overwrites gpu_mem_1024=xxx in /boot/config.txt. This overrides the gpu_mem setting in /boot/config.txx.
+
+Setting this will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
+
+
+### pl-gpu_core temp
+Returns the temperature of the GPU core as an integer in degrees centigrade.
+
+Example:
+```shell
+    g_temp=$(pl-gpu_temp)
+    echo "The GPU core is currently $g_temp degrees centigrade."
+```
+
+
+#### pl-gpu_core speed
+
+
+#### pl-gpu_core oc
 
 ### CPU functions
 #### pl-cpu_id
@@ -220,8 +259,6 @@ Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot dri
 #### pl-cpu_oc
 #### pl-cpu_gov
 #### pl-cpu_temp
-
-### GPIO functions
 
 ### Model functions
 #### pl-model_is4
@@ -243,6 +280,21 @@ Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot dri
 #### pl-model_is32bit
 #### pl-model_is64bit
 
+### GPIO functions
+
+### CSI Functions
+
+### Wifi Functions
+
+### BT Functions
+
+### Camera Functions
+
+### Screen Functions
+
+### Audio Functions
+
+
 ## Credits
 * Russell Armstrong - original author and project maintainer
 
@@ -258,24 +310,24 @@ Setting gpu_mem256, gpu_mem512, and gpu_mem1024 will allow swapping the boot dri
         + [x] **pl-mem_total**
         + [x] **pl-mem_greater**
         + [x] **pl-mem_less**
-    - [ ] **pl-sys_mem_rdisk**
+    - [ ] **pl-sys_mem rdisk**
         + [ ] complete spec'ing out function README.md
-    - [ ] **pl-sys_mem_zswap**
+    - [ ] **pl-sys_mem zswap**
         + [ ] investigate zswap
         + [ ] spec out zswap
-    - [ ] **pl-sys_mem_swap**
+    - [ ] **pl-sys_mem swap**
         + [ ] investigate swapiness
         + [ ] spec out swapiness
 * [ ] GPU functions:
     - [x] **pl-gpu_mem**
         + [x] insert table into README.md of default values for each pi model
-        + [x] insert table into README.md of max recommended values for eachpi model
+        + [x] insert table into README.md of max recommended values for each pi model
         + [x] insert examples for each invocation
-    - [ ] **pl-gpu_mem256**
+    - [ ] **pl-gpu_mem set256**
         + [ ] insert example for invocation
-    - [ ] **pl-gpu_mem512**
+    - [ ] **pl-gpu_mem set512**
         + [ ] insert example for invocation
-    - [ ] **pl-gpu_mem1024**
+    - [ ] **pl-gpu_mem set1024**
         + [ ] insert example for invocation
     - [ ] **pl-gpu_temp**
 * [ ] CPU functions:
