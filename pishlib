@@ -40,6 +40,46 @@ pl-sys_mem() {
         [[ $(__mem_total) -gt $2 ]]
         ;;
 
+      is256m)
+        [[ $(__mem_total) -lt 256 ]]
+      ;;
+
+      is512m)
+        [[ $(__mem_total) -lt 512 ]] && [[ $(__mem_total) -gt 256 ]]
+      ;;
+
+      is1g)
+        [[ $(__mem_total) -lt 1024 ]] && [[ $(__mem_total) -gt 512 ]]
+      ;;
+
+      is2g)
+        [[ $(__mem_total) -lt 2048 ]] && [[ $(__mem_total) -gt 1024 ]]
+      ;;
+
+
+      is4g)
+        [[ $(__mem_total) -lt 4096 ]] && [[ $(__mem_total) -gt 2048 ]]
+      ;;
+
+      is8g)
+        [[ $(__mem_total) -lt 8192 ]] && [[ $(__mem_total) -gt 4096 ]]
+      ;;
+
+      ramdisk)
+        __mem_rdisk
+        return $?
+      ;;
+
+      zswap)
+        __mem_zswap
+        return $?
+      ;;
+
+      swap)
+        __mem_swap
+        return $?
+      ;;
+
       *)
         return 1
         ;;
@@ -52,16 +92,16 @@ __mem_total () {
     echo $(( $mem / 1024 ))
 }
 
-pl-sys_mem_rdisk() {
-    return
+__mem_rdisk() {
+  return
 }
 
-pl-sys_mem_zswap() {
-    return
+__mem_zswap() {
+  return
 }
 
-pl-sys_mem_swap() {
-    return
+__mem_swap() {
+  return
 }
 
 
