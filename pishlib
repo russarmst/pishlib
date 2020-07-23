@@ -197,28 +197,42 @@ pl-model (){
   case $1 in
 
     "")
-      # Return model string
+      echo $(awk '{print}' /sys/firmware/devicetree/base/model)
       return 0
       ;;
 
     is1)
-      # Return bool if model=Pi1
-      return 0
+      if [[ $(__pl-model_generation $(__pl-model_rev_code)) -eq 1 ]]; then
+        return 0
+      else
+        return 1
+      fi
       ;;
 
     is2)
-      # Return bool if model=Pi2
-      return 0
+      if [[ $(__pl-model_generation $(__pl-model_rev_code)) -eq 2 ]]; then
+        return 0
+      else
+        return 1
+      fi
       ;;
 
     is3)
-      # Return bool if model=Pi3
-      return 0
+      rev=$(__pl-model_rev_code)
+      gen=$(__pl-model_generation $(rev)) 
+      if [[ $(gen)=3 ]]; then
+        return 0
+      else
+        return 1
+      fi
       ;;
 
     is4)
-      # Return bool if model=Pi4
-      return 0
+      if [[ $(__pl-model_generation $(__pl-model_rev_code)) -eq 4 ]]; then
+        return 0
+      else
+        return 1
+      fi
       ;;
 
     isZero)
@@ -232,4 +246,21 @@ pl-model (){
       ;;
 
   esac
+}
+
+
+__pl-model_rev_code() {
+  echo $(awk '/Revision/ {print $3}' /proc/cpuinfo)
+}
+
+__pl-model_generation() {
+  echo $(awk -v rev_code="$1" '$1==rev_code {print $2}' ./pi_model_data.txt)
+}
+
+__pl-model_model() {
+  echo $(awk '{print $5}' /sys/firmware/devicetree/base/model)
+}
+
+__pl-model_revision() {
+  echo $(awk '{print $7}' /sys/firmware/devicetree/base/model)
 }
