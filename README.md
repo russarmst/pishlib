@@ -19,9 +19,9 @@ fi
 
 when you can write this:
 ```shell
-. /path/to/pishlib
+source /path/to/pishlib
 
-if pl-sys-mem is4g; then
+if pl-mem is4g; then
     echo 'Your Pi has 4G of total system ram.'
 fi
 ```
@@ -33,14 +33,14 @@ fi
 * [Contributing](#Contributing)
 * [Functions](#Functions)
     - [Memory Functions](#Memory-Functions)
-        + [pl-sys_mem](#pl-sys_mem)
-        + [pl-sys_mem lt xxxx](#pl-sys_mem-lt-xxxx)
-        + [pl-sys_mem gt xxxx](#pl-sys_mem-gt-xxxx) 
-        + [pl-sys_mem eq xxxx](#pl-sys_mem-eq-xxxx)
-        + [pl-sys_mem isxxx[m|g]](#pl-sys_mem-isxxx[m|g])
-        + [pl-sys_mem ramdisk](#pl-sys_mem-ramdisk) 
-        + [pl-sys_mem zswap](#pl-sys_mem-zswap) 
-        + [pl-sys_mem swap](#pl-sys_mem-swap) 
+        + [pl-mem](#pl-mem)
+        + [pl-mem lt xxxx](#pl-mem-lt-xxxx)
+        + [pl-mem gt xxxx](#pl-mem-gt-xxxx) 
+        + [pl-mem eq xxxx](#pl-mem-eq-xxxx)
+        + [pl-mem isxxx[m|g]](#pl-mem-isxxx[m|g])
+        + [pl-mem ramdisk](#pl-mem-ramdisk) 
+        + [pl-mem zswap](#pl-mem-zswap) 
+        + [pl-mem swap](#pl-mem-swap) 
     - [GPU Functions](#gpu-Functions)
         + [pl-gpu_mem](#pl-gpu_mem) 
         + [pl-gpu_mem256](#pl-gpu_mem256) 
@@ -65,11 +65,17 @@ Clone the project:
 git clone https://github.com/russarmst/pishlib.git
 ```
 
-In your shell script add the following:
+pishlib is seperated into several different modules so you can source only those modules you require. The functions in some modules are dependent on the functions of other modules and these are handled automatically for your convenience.
+
+To include just the memory functions add the following to your script:
 ```shell
-. /path/to/pishlib
+source /path/to/pishlib-mem
 ```
 
+To include all the pishlib functions in your script add the following:
+```shell
+source /path/to/pishlib
+```
 
 ## Contributing
 If you have the time and the ability to contribute then your conributions will be gratefully recieved and credited to you. You can contribute in one of the following ways:
@@ -90,36 +96,35 @@ cd /path/to/pishlib
 ./test
 ```
 
-
 ## Functions
 pishlib contains many functions to query and control a Raspberry Pi from your script and are grouped by functionality .
 
 ### Memory Functions
-#### pl-sys_mem
+#### pl-mem
 Returns the amount of system memory as an intger in Mb.
 
 Example:
 ```shell
-echo "Your Pi has $(pl-sys_mem)Mb of system memory."
+echo "Your Pi has $(pl-mem)Mb of system memory."
 ```
 
-#### pl-sys_mem lt xxxx
+#### pl-mem lt xxxx
 Returns a boolean depending on the truthiness if the system memory is less than supplied integer (xxxx) in Mb.
 
 Example:
 ```shell
-if [[ pl-sys_mem lt 512 ]]; then
+if [[ pl-mem lt 512 ]]; then
     echo "Your Pi doesn't have the meet the minimum amount of system memory to run this programme."
     exit
 fi
 ```
 
-#### pl-sys_mem gt xxxx
+#### pl-mem gt xxxx
 Returns a boolean depending on the truthiness if the system memory is greater than supplied integer (xxxx) in Mb.
 
 Example:
 ```shell
-if [[ pl-sys_mem gt 512 ]]; then
+if [[ pl-mem gt 512 ]]; then
     echo "Your Pi meets the minimum amount of system memory to run this programme."
     exit
 else
@@ -128,33 +133,33 @@ else
 fi
 ```
 
-#### pl-sys_mem eq xxxx
+#### pl-mem eq xxxx
 Returns a boolean depending on the truthiness if the system memory is equal to the supplied integer (xxxx) in Mb.
 
 Example:
 ```shell
-    if [[ pl-sys_mem eq 1024 ]]; then
+    if [[ pl-mem eq 1024 ]]; then
         echo "Your Pi has 1024Mb of system memory."
 ```
 
-#### pl-sys_mem isxxx[m|g]
+#### pl-mem isxxx[m|g]
 Returns a boolean if the system memory is equal to xxx[m|g]. Valid values for xxx are 256m, 512m, 1g, 2g, 4g, or 8g.
 
 Example:
 ```shell
-    if [[ pl-sys_mem is1g ]]; then
+    if [[ pl-mem is1g ]]; then
         echo "Your Pi has 1024Mb of system memory."
 ```
 
-#### pl-sys_mem ramdisk
+#### pl-mem ramdisk
 Still todo. Intends to setup up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
 
 **Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
 
-#### pl-sys_mem zswap
+#### pl-mem zswap
 Still todo.
 
-#### pl-sys_mem swap
+#### pl-mem swap
 Still todo.
 
 
@@ -318,12 +323,12 @@ Example:
         + [x] **pl-mem_total**
         + [x] **pl-mem_greater**
         + [x] **pl-mem_less**
-    - [ ] **pl-sys_mem rdisk**
+    - [ ] **pl-mem rdisk**
         + [ ] complete spec'ing out function README.md
-    - [ ] **pl-sys_mem zswap**
+    - [ ] **pl-mem zswap**
         + [ ] investigate zswap
         + [ ] spec out zswap
-    - [ ] **pl-sys_mem swap**
+    - [ ] **pl-mem swap**
         + [ ] investigate swapiness
         + [ ] spec out swapiness
 * [ ] GPU functions:
