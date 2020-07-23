@@ -1,0 +1,46 @@
+0002 				1 			B 		1.0 	BCM2835 	256MB 		Egoman
+0003 				1 			B 		1.0 	BCM2835 	256MB 		Egoman
+0004                1           B       2.0     BCM2835     256MB       Sony UK
+0005                1           B       2.0     BCM2835     256MB       Qisda
+0006                1           B       2.0     BCM2835     256MB       Egoman
+0007                1           A       2.0     BCM2835     256MB       Egoman
+0008                1           A       2.0     BCM2835     256MB       Sony UK
+0009                1           A       2.0     BCM2835     256MB       Qisda
+000d                1           B       2.0     BCM2835     512MB       Egoman
+000e                1           B       2.0     BCM2835     512MB       Sony UK
+000f                1           B       2.0     BCM2835     512MB       Egoman
+0010                1           B+      1.2     BCM2835     512MB       Sony UK
+0011                1           CM      1.0     BCM2835     512MB       Sony UK
+0012                1           A+      1.1     BCM2835     256MB       Sony UK
+0013                1           B+      1.2     BCM2835     512MB       Embest
+0014                1           CM      1.0     BCM2835     512MB       Embest
+0015                1           A+      1.1     BCM2835     256MB/512MB Embest
+900021              1           A+      1.1     BCM2835     512MB       Sony UK
+900032              1           B+      1.2     BCM2835     512MB       Sony UK
+900092              1           Zero    1.2     BCM2835     512MB       Sony UK
+900093              1           Zero    1.3     BCM2835     512MB       Sony UK
+9000c1              1           Zero W  1.1     BCM2835     512MB       Sony UK
+9020e0              3           A+      1.0     BCM2837B0   512MB       Sony UK
+920092              1           Zero    1.2     BCM2835     512MB       Embest
+920093              1           Zero    1.3     BCM2835     512MB       Embest
+900061              1           CM      1.1     BCM2835     512MB       Sony UK
+a01040              2           B       1.0     BCM2836     1GB         Sony UK
+a01041              2           B       1.1     BCM2836     1GB         Sony UK
+a02082              3           B       1.2     BCM2837     1GB         Sony UK
+a020a0              3           CM      1.0     BCM2837     1GB         Sony UK
+a020d3              3           B+      1.3     BCM2837B0   1GB         Sony UK
+a02042              2           B       1.2     BCM2837     1GB         Sony UK
+a21041              2           B       1.1     BCM2836     1GB         Embest
+a22042              2           B       1.2     BCM2837     1GB         Embest
+a22082              3           B       1.2     BCM2837     1GB         Embest
+a220a0              3           3       1.0     BCM2837     1GB         Embest
+a32082              3           B       1.2     BCM2837     1GB         Sony Japan
+a52082              3           B       1.2     BCM2837     1GB         Stadium
+a22083              3           B       1.3     BCM2837     1GB         Embest
+a02100              3           CM      1.0     BCM2837     1GB         Sony UK
+a03111              4           B       1.1     BCM2711     1GB         Sony UK
+b03111              4           B       1.1     BCM2711     2GB         Sony UK
+b03112              4           B       1.2     BCM2711     2GB         Sony UK
+c03111              4           B       1.1     BCM2711     4GB         Sony UK
+c03112              4           B       1.2     BCM2711     4GB         Sony UK
+d03114              4           B       1.4     BCM2711     8GB         Sony UK
