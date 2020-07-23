@@ -153,18 +153,32 @@ pl-gpu_mem() {
   esac
 }
 
-__gpu_get() {
-  # TODO: this needs investigating and testing.
-  # TODO: What if gpu_mem doesn't exist in config.txt?
-    if [ -f "/usr/bin/vcgencmd" ; then
-        gpu_mem=`vcgencmd get_mem gpu | sed 's/[^0-9]*//g'`
-    else
-        gpu_mem=`sed 's/[^0-9]*//g' /boot/config.txt`
-    fi
-    echo $(gpu_mem)
+__pl-gpu_get_mem() {
+  # TODO: Test.
+
+  # extract setting from /boot/config.txt, may be ""
+  pl-gpu_mem=$(grep gpu_mem /boot/config.txt | sed 's/[^0-9]*//g')
+
+  if [[ -f "/usr/bin/vcgencmd" ]]; then
+    # best option if we have vcgencmd
+    pl-gpu_mem=$(vcgencmd get_mem gpu | sed 's/[^0-9]*//g')
+  elif [[ $pl-gpu_mem=="" ]]; then
+    # if not defined in /boot/config.txt then default allocation depending on model
+    pl-gpu_mem=$(__pl-gpu_get_default_mem)
+  fi
+  echo $(pl-gpu_mem)
 }
 
-__gpu_set() {
+__pl-gpu_get_default_mem() {
+  if [[ $(pl-model is1) ]] | [[ $(pl-model isZero) ]]; then
+      pl-gpu_mem=64
+  else
+      pl-gpu_mem=76
+  fi
+  echo $(pl-gpu_mem)
+}
+
+__pl-gpu_set() {
   # TODO: this needs testing.
   # TODO: Put in logic to incase gpu_mem doesn't exist in config.txt 
     sed -ri "s/gpu_mem=[0-9]+/gpu_mem=$1/g" /boot/config.txt
