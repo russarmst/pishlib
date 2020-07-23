@@ -82,6 +82,14 @@ If you have the time and the ability to contribute then your conributions will b
 * Spotted something that doens't quite make sense or could be implemeneted better? File a Github Issue for **Technical Review** and/or post a comment in the relevant Pull Request. 
 * Do you kow how we might implement (in Bash) one of the functions on the Todo list? File a Github Issue for **Techincal Review** with details of the implementation.
 
+To clone the repo do the following:
+```shell
+git clone https://github.com/russarmst/pishlib.git
+git submodule update --init --recursive
+cd /path/to/pishlib
+./test
+```
+
 
 ## Functions
 pishlib contains many functions to query and control a Raspberry Pi from your script and are grouped by functionality .
