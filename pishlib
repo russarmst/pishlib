@@ -22,61 +22,61 @@ pl-sys_mem() {
 
       "")
         # Get system mem Size. Return int as Mb
-        echo $(__mem_total)
+        echo $(__pl-mem_total)
         ;;
 
       eq)
         # System mem = $2? Return bool.
-        [[ $(__mem_total) -eq $2 ]]
+        [[ $(__pl-mem_total) -eq $2 ]]
         ;;
 
       lt)
         # System mem < to $2? Return bool.
-        [[ $(__mem_total) -lt $2 ]]
+        [[ $(__pl-mem_total) -lt $2 ]]
         ;;
 
       gt)
         # System mem > to $2? Return bool.
-        [[ $(__mem_total) -gt $2 ]]
+        [[ $(__pl-mem_total) -gt $2 ]]
         ;;
 
       is256m)
-        [[ $(__mem_total) -lt 256 ]]
+        [[ $(__pl-mem_total) -lt 256 ]]
       ;;
 
       is512m)
-        [[ $(__mem_total) -lt 512 ]] && [[ $(__mem_total) -gt 256 ]]
+        [[ $(__pl-mem_total) -lt 512 ]] && [[ $(__pl-mem_total) -gt 256 ]]
       ;;
 
       is1g)
-        [[ $(__mem_total) -lt 1024 ]] && [[ $(__mem_total) -gt 512 ]]
+        [[ $(__pl-mem_total) -lt 1024 ]] && [[ $(__pl-mem_total) -gt 512 ]]
       ;;
 
       is2g)
-        [[ $(__mem_total) -lt 2048 ]] && [[ $(__mem_total) -gt 1024 ]]
+        [[ $(__pl-mem_total) -lt 2048 ]] && [[ $(__pl-mem_total) -gt 1024 ]]
       ;;
 
 
       is4g)
-        [[ $(__mem_total) -lt 4096 ]] && [[ $(__mem_total) -gt 2048 ]]
+        [[ $(__pl-mem_total) -lt 4096 ]] && [[ $(__pl-mem_total) -gt 2048 ]]
       ;;
 
       is8g)
-        [[ $(__mem_total) -lt 8192 ]] && [[ $(__mem_total) -gt 4096 ]]
+        [[ $(__pl-mem_total) -lt 8192 ]] && [[ $(__pl-mem_total) -gt 4096 ]]
       ;;
 
       ramdisk)
-        __mem_rdisk
+        __pl-mem_rdisk
         return $?
       ;;
 
       zswap)
-        __mem_zswap
+        __pl-mem_zswap
         return $?
       ;;
 
       swap)
-        __mem_swap
+        __pl-mem_swap
         return $?
       ;;
 
@@ -87,20 +87,20 @@ pl-sys_mem() {
     esac
 }
 
-__mem_total () {
+__pl-mem_total () {
     mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
     echo $(( $mem / 1024 ))
 }
 
-__mem_rdisk() {
+__pl-mem_rdisk() {
   return
 }
 
-__mem_zswap() {
+__pl-mem_zswap() {
   return
 }
 
-__mem_swap() {
+__pl-mem_swap() {
   return
 }
 
@@ -117,27 +117,25 @@ pl-gpu_mem() {
   case $1 in
 
     "")
-      __gpu_get
+      # TODO: test.
+      __pl-gpu_get_mem
       ;;
 
     default)
-      if [[ $(pl-model is1) ]] | [[ $(pl-model isZero) ]]; then
-          gpu_mem=64
-      else
-          gpu_mem=76
-      fi
-      __gpu_set $gpu_mem
+      # needs testing
+      pl-gpu_mem=$(__pl-gpu_get_default_mem)
+      __pl-gpu_set $pl-gpu_mem
       ;;
 
     max)
       if [[ $(pl-sys_mem is256m) ]]; then
-          gpu_mem=128
+          pl-gpu_mem=128
       elif [[ $(pl-sys_mem is512m) ]]; then
-          gpu_mem=384
+          pl-gpu_mem=384
       elif [[ $(pl-mem_greater 512) ]]; then
-          gpu_mem=512
+          pl-gpu_mem=512
       fi
-      __gpu_set $gpu_mem
+      __pl-gpu_set $pl-gpu_mem
       ;;
 
     *)
@@ -146,7 +144,7 @@ pl-gpu_mem() {
         # setting more than 1024 doesn't make sense
         return 1
       elif [[ $1 -gt 15 ]] & [[ $1 -lt 1025 ]]; then
-        __gpu_set $1
+        __pl-gpu_set $1
         return $?
       else
         return 1
