@@ -1,0 +1,73 @@
+source pishlib_model
+
+pl-gpu_mem() {
+
+  case $1 in
+
+    "")
+      # TODO: test.
+      __pl-gpu_get_mem
+      ;;
+
+    default)
+      # needs testing
+      pl-gpu_mem=$(__pl-gpu_get_default_mem)
+      __pl-gpu_set $pl-gpu_mem
+      ;;
+
+    max)
+      if [[ $(pl-sys_mem is256m) ]]; then
+          pl-gpu_mem=128
+      elif [[ $(pl-sys_mem is512m) ]]; then
+          pl-gpu_mem=384
+      elif [[ $(pl-mem_greater 512) ]]; then
+          pl-gpu_mem=512
+      fi
+      __pl-gpu_set $pl-gpu_mem
+      ;;
+
+    *)
+      if [[ $1 -lt 16 ]] | [[ $1 -gt 1024 ]]; then
+        # setting less than 16 may prevent pi from booting
+        # setting more than 1024 doesn't make sense
+        return 1
+      elif [[ $1 -gt 15 ]] & [[ $1 -lt 1025 ]]; then
+        __pl-gpu_set $1
+        return $?
+      else
+        return 1
+      fi
+      ;;
+  esac
+}
+
+__pl-gpu_get_mem() {
+  # TODO: Test.
+
+  # extract setting from /boot/config.txt, may be ""
+  pl-gpu_mem=$(grep gpu_mem /boot/config.txt | sed 's/[^0-9]*//g')
+
+  if [[ -f "/usr/bin/vcgencmd" ]]; then
+    # best option if we have vcgencmd
+    pl-gpu_mem=$(vcgencmd get_mem gpu | sed 's/[^0-9]*//g')
+  elif [[ $pl-gpu_mem=="" ]]; then
+    # if not defined in /boot/config.txt then default allocation depending on model
+    pl-gpu_mem=$(__pl-gpu_get_default_mem)
+  fi
+  echo $(pl-gpu_mem)
+}
+
+__pl-gpu_get_default_mem() {
+  if [[ $(pl-model is1) ]] | [[ $(pl-model isZero) ]]; then
+      pl-gpu_mem=64
+  else
+      pl-gpu_mem=76
+  fi
+  echo $(pl-gpu_mem)
+}
+
+__pl-gpu_set() {
+  # TODO: this needs testing.
+  # TODO: Put in logic to incase gpu_mem doesn't exist in config.txt 
+    sed -ri "s/gpu_mem=[0-9]+/gpu_mem=$1/g" /boot/config.txt
+}
