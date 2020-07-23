@@ -1,4 +1,4 @@
-pl-sys_mem() {   
+pl-mem() {   
 
     case $1 in
 
