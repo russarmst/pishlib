@@ -68,14 +68,16 @@ __pl-gpu_get_default_mem() {
 
 __pl-gpu_set() {
   # TODO: this needs testing.
-  if [[ $(grep "gpu_mem" config.txt) ]]; then
-    # gpu_mem in file
-    sed -Eri "s/^gpu_mem=[0-9]+$/gpu_mem=$1/g" /boot/config.txt
-  elif [[ $(grep -E ".*#.*gpu_mem" config.txt) ]]; then
+  if [[ $(grep -E ".*#.*gpu_mem" config.txt) ]]; then
     # gpu_mem commented out
     sed -Eri "s/^.*#.*gpu_mem=[0-9]+$/gpu_mem=$1/g" /boot/config.txt
+  elif [[ $(grep "gpu_mem" config.txt) ]]; then
+    # gpu_mem in file
+    sed -Eri "s/^gpu_mem=[0-9]+$/gpu_mem=$1/g" /boot/config.txt
   else
     # gpu_mem not in file
     echo "gpu_mem=$1" >> /boot/config.txt
   fi
 }
+
+sed -E "s/^gpu_mem=[0-9]+$" /boot/config.txt
