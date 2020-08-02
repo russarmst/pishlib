@@ -12,17 +12,22 @@ source "${BATS_TEST_DIRNAME}/../pishlib-gpu" #>/dev/null 2>/dev/null
   }
   export -f __pl-gpu_get_mem
 
-  run pl-gpu_mem
-  assert_output 128
+@test "__pl-gpu_set 128: # gpu_mem=64 in /boot/config.txt." {
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  cat <<EOF > $BOOT_CONF_FILE
+# gpu_mem=64
+EOF
+  run __pl-gpu_set 128
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
+  rm $BOOT_CONF_FILE
 }
 
-@test "pl-gpu_mem default: set default gpu_mem for Pi 1 and Pi Zero." {
-  __pl-gpu_get_default_mem() {
-    echo 64
-  }
-  export -f __pl-gpu_get_default_mem
-
-  run pl-gpu_mem default
-  g_mem=$(grep gpu_mem /boot/config.txt | sed 's/[^0-9]*//g')
-  assert_output 64
+@test "__pl-gpu_set 128: gpu_mem does not exists in /boot/config.txt." {
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run __pl-gpu_set 128
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
+  rm $BOOT_CONF_FILE
 }
+
