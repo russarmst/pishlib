@@ -1,4 +1,4 @@
-source pishlib_model
+source pishlib-model
 
 pl-gpu_mem() {
 
@@ -71,7 +71,7 @@ __pl-gpu_set() {
   if [[ $(grep "gpu_mem" config.txt) ]]; then
     # gpu_mem in file
     sed -Eri "s/^gpu_mem=[0-9]+$/gpu_mem=$1/g" /boot/config.txt
-  elif [[ $(grep -E ".*#.*gpu_mem" config.txt ]]; then
+  elif [[ $(grep -E ".*#.*gpu_mem" config.txt) ]]; then
     # gpu_mem commented out
     sed -Eri "s/^.*#.*gpu_mem=[0-9]+$/gpu_mem=$1/g" /boot/config.txt
   else
