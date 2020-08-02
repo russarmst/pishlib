@@ -1,5 +1,7 @@
 source pishlib-model
 
+BOOT_CONF_FILE="/boot/config.txt"
+
 pl-gpu_mem() {
 
   case $1 in
@@ -45,7 +47,7 @@ __pl-gpu_get_mem() {
   # TODO: Test.
 
   # extract setting from /boot/config.txt, may be ""
-  pl-gpu_mem=$(grep gpu_mem /boot/config.txt | sed 's/[^0-9]*//g')
+  pl-gpu_mem=$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')
 
   if [[ -f "/usr/bin/vcgencmd" ]]; then
     # best option if we have vcgencmd
@@ -68,14 +70,14 @@ __pl-gpu_get_default_mem() {
 
 __pl-gpu_set() {
   # TODO: this needs testing.
-  if [[ $(grep -E ".*#.*gpu_mem" /boot/config.txt) ]]; then
+  if [[ $(grep -E ".*#.*gpu_mem" $BOOT_CONF_FILE) ]]; then
     # gpu_mem in config.txt but commented out
-    sed -Eri "s/^.*#.*gpu_mem=[0-9]+$/gpu_mem=$1/g" /boot/config.txt
-  elif [[ $(grep "gpu_mem" config.txt) ]]; then
+    sed -Eri "s/^.*#.*gpu_mem=[0-9]+$/gpu_mem=$1/g" $BOOT_CONF_FILE
+  elif [[ $(grep "gpu_mem" $BOOT_CONF_FILE) ]]; then
     # gpu_mem in config.txt
-    sed -Eri "s/^gpu_mem=[0-9]+$/gpu_mem=$1/g" /boot/config.txt
+    sed -Eri "s/^gpu_mem=[0-9]+$/gpu_mem=$1/g" $BOOT_CONF_FILE
   else
     # gpu_mem not in config.txt
-    echo "gpu_mem=$1" >> /boot/config.txt
+    echo "gpu_mem=$1" >> $BOOT_CONF_FILE
   fi
 }
