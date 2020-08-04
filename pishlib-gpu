@@ -7,17 +7,18 @@ pl-gpu_mem() {
   case $1 in
 
     "")
-      # TODO: test.
+        # TODO: this needs testing
       __pl-gpu_get_mem
       ;;
 
     default)
-      # needs testing
+      # TODO: this needs testing
       pl-gpu_mem=$(__pl-gpu_get_default_mem)
       __pl-gpu_set $pl-gpu_mem
       ;;
 
     max)
+      # TODO: this needs testing
       if [[ $(pl-sys_mem is256m) ]]; then
           pl-gpu_mem=128
       elif [[ $(pl-sys_mem is512m) ]]; then
@@ -29,6 +30,7 @@ pl-gpu_mem() {
       ;;
 
     *)
+      # TODO: this needs testing
       if [[ $1 -lt 16 ]] | [[ $1 -gt 1024 ]]; then
         # setting less than 16 may prevent pi from booting
         # setting more than 1024 doesn't make sense
@@ -44,7 +46,7 @@ pl-gpu_mem() {
 }
 
 __pl-gpu_get_mem() {
-  # TODO: Test.
+  # TODO: this needs testing
 
   # extract setting from /boot/config.txt, may be ""
   pl-gpu_mem=$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')
@@ -60,6 +62,7 @@ __pl-gpu_get_mem() {
 }
 
 __pl-gpu_get_default_mem() {
+  # TODO: this needs testing
   if [[ $(pl-model is1) ]] | [[ $(pl-model isZero) ]]; then
       pl-gpu_mem=64
   else
@@ -69,7 +72,6 @@ __pl-gpu_get_default_mem() {
 }
 
 __pl-gpu_set() {
-  # TODO: this needs testing.
   if [[ $(grep -E ".*#.*gpu_mem" $BOOT_CONF_FILE) ]]; then
     # gpu_mem in config.txt but commented out
     sed -Eri "s/^.*#.*gpu_mem=[0-9]+$/gpu_mem=$1/g" $BOOT_CONF_FILE
