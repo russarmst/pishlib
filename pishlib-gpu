@@ -1,6 +1,7 @@
 source pishlib-model
 
 BOOT_CONF_FILE="/boot/config.txt"
+VCGENCMD="/usr/bin/vcgencmd"
 
 pl-gpu_mem() {
 
@@ -48,17 +49,17 @@ pl-gpu_mem() {
 __pl-gpu_get_mem() {
   # TODO: this needs testing
 
-  # extract setting from /boot/config.txt, may be ""
-  pl-gpu_mem=$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')
+  # extract gpu_mem int from /boot/config.txt, may be ""
+  __gpu_mem=$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')
 
-  if [[ -f "/usr/bin/vcgencmd" ]]; then
+  if [[ -f $VCGENCMD ]]; then
     # best option if we have vcgencmd
-    pl-gpu_mem=$(vcgencmd get_mem gpu | sed 's/[^0-9]*//g')
-  elif [[ $pl-gpu_mem=="" ]]; then
-    # if not defined in /boot/config.txt then default allocation depending on model
-    pl-gpu_mem=$(__pl-gpu_get_default_mem)
+    __gpu_mem=$($VCGENCMD get_mem gpu | sed 's/[^0-9]*//g')
+  elif [[ $__gpu_mem -eq "" ]]; then
+    # gpu_mem not defined in /boot/config.txt
+    __gpu_mem=$(__pl-gpu_get_default_mem)
   fi
-  echo $(pl-gpu_mem)
+  echo $(__gpu_mem)
 }
 
 __pl-gpu_get_default_mem() {
