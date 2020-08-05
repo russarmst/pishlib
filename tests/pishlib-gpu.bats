@@ -62,32 +62,28 @@ EOF
   rm $BOOT_CONF_FILE
 }
 
-@test "__pl-gpu_get_mem: returns an integer default for Pi1 or Pi Zero." {
+@test "__pl-gpu_get_mem: returns default integer for Pi 1 or Pi Zero." {
   # vcgencmd not available, gpu_mem not set in /boot/config.txt
   # next best option return default gpu_mem according to the model
   VCGENCMD=""
   pl-model() {
-    if [[ $1 -eq "is1" ]]; then
-      return 0
-    elif [[ $1 -eq "isZero" ]]; then
-      return 0
-    fi
+    echo "64"
   }
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
   run __pl-gpu_get_mem
-  assert_output "76"
+  assert_output "64"
   rm $BOOT_CONF_FILE
 }
 
-@test "__pl-gpu_get_mem: returns an integer default for any model except for Pi1 or Pi Zero." {
+@test "__pl-gpu_get_mem: returns default integer for any model except for Pi 1 or Pi Zero." {
   # vcgencmd not available, gpu_mem not set in /boot/config.txt
   # next best option return default gpu_mem according to the model
   VCGENCMD=""
   pl-model() {
-    if [[ $1 -eq "is1" ]]; then
+    if [[ $1 = "is1" ]]; then
       return 1
-    elif [[ $1 -eq "isZero" ]]; then
+    elif [[ $1 = "isZero" ]]; then
       return 1
     fi
   }
