@@ -14,62 +14,60 @@ pl-gpu_mem() {
 
     default)
       # TODO: this needs testing
-      pl-gpu_mem=$(__pl-gpu_get_default_mem)
-      __pl-gpu_set $pl-gpu_mem
+      pl-gpu_mem="$(__pl-gpu_get_default_mem)"
+      __pl-gpu_set "$pl-gpu_mem"
       ;;
 
     max)
       # TODO: this needs testing
-      if [[ $(pl-sys_mem is256m) ]]; then
+      if [[ "$(pl-sys_mem is256m)" ]]; then
           pl-gpu_mem=128
-      elif [[ $(pl-sys_mem is512m) ]]; then
+      elif [[ "$(pl-sys_mem is512m)" ]]; then
           pl-gpu_mem=384
-      elif [[ $(pl-mem_greater 512) ]]; then
+      elif [[ "$(pl-mem_greater 512)" ]]; then
           pl-gpu_mem=512
       fi
-      __pl-gpu_set $pl-gpu_mem
+      __pl-gpu_set "$pl-gpu_mem"
       ;;
 
     *)
       # TODO: this needs testing
-      if [[ $1 -lt 16 ]] | [[ $1 -gt 1024 ]]; then
+      if [[ "$1" -lt 16 ]] | [[ "$1" -gt 1024 ]]; then
         # setting less than 16 may prevent pi from booting
         # setting more than 1024 doesn't make sense
         return 1
-      elif [[ $1 -gt 15 ]] & [[ $1 -lt 1025 ]]; then
-        __pl-gpu_set $1
-        return $?
+      elif [[ "$1" -gt 15 ]] & [[ "$1" -lt 1025 ]]; then
+        __pl-gpu_set "$1"
+        return "$?"
       else
         return 1
       fi
       ;;
   esac
 }
-
+ 
 __pl-gpu_get_mem() {
-  # TODO: this needs testing
-
   # extract gpu_mem int from /boot/config.txt, may be ""
-  __gpu_mem=$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')
+  __gpu_mem="$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')"
 
   if [[ -f $VCGENCMD ]]; then
     # best option if we have vcgencmd
-    __gpu_mem=$($VCGENCMD get_mem gpu | sed 's/[^0-9]*//g')
+    __gpu_mem=$("$VCGENCMD" get_mem gpu | sed 's/[^0-9]*//g')
   elif [[ $__gpu_mem -eq "" ]]; then
     # gpu_mem not defined in /boot/config.txt
     __gpu_mem=$(__pl-gpu_get_default_mem)
   fi
-  echo $(__gpu_mem)
+  echo "$__gpu_mem"
 }
 
 __pl-gpu_get_default_mem() {
   # TODO: this needs testing
-  if [[ $(pl-model is1) ]] | [[ $(pl-model isZero) ]]; then
-      pl-gpu_mem=64
+  if [[ "$(pl-model is1)" ]] | [[ "$(pl-model isZero)" ]]; then
+      __gpu_mem=64
   else
-      pl-gpu_mem=76
+      __gpu_mem=76
   fi
-  echo $(pl-gpu_mem)
+  echo $__gpu_mem
 }
 
 __pl-gpu_set() {
