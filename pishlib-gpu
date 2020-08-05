@@ -32,7 +32,7 @@ pl-gpu_mem() {
 
     *)
       # TODO: this needs testing
-      if [[ "$1" -lt 16 ]] | [[ "$1" -gt 1024 ]]; then
+      if [[ "$1" -lt 16 ]] || [[ "$1" -gt 1024 ]]; then
         # setting less than 16 may prevent pi from booting
         # setting more than 1024 doesn't make sense
         return 1
@@ -62,7 +62,7 @@ __pl-gpu_get_mem() {
 
 __pl-gpu_get_default_mem() {
   # TODO: this needs testing
-  if [[ "$(pl-model is1)" ]] | [[ "$(pl-model isZero)" ]]; then
+  if [[ "$(pl-model is1)" ]] || [[ "$(pl-model isZero)" ]]; then
       __gpu_mem=64
   else
       __gpu_mem=76
