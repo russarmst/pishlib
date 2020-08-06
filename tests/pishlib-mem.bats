@@ -5,7 +5,7 @@ load 'libs/bats-assert/load'
 
 source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
-@test "pl-mem: returns int MB" {
+@test "MEM 1. pl-mem: returns int MB" {
   # mock internal function
   __pl-mem_total() {
     echo 1024
@@ -16,7 +16,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
   assert_output 1024
 }
 
-@test "pl-mem eq: is true" {
+@test "MEM 2. pl-mem eq: is true" {
   __pl-mem_total() {
     echo 1024
   }
@@ -26,7 +26,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
   assert_success
 }
 
-@test "pl-mem eq: is false" {
+@test "MEM 3. pl-mem eq: is false" {
   __pl-mem_total() {
     echo 1024
   }
@@ -36,7 +36,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
   assert_failure
 }
 
-@test "pl-mem lt: is true" {
+@test "MEM 4. pl-mem lt: is true" {
   __pl-mem_total() {
     echo 1024
   }
@@ -47,7 +47,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem lt: is false" {
+@test "MEM 5. pl-mem lt: is false" {
   __pl-mem_total() {
     echo 1024
   }
@@ -57,7 +57,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
   assert_failure
 }
 
-@test "pl-mem gt: is true" {
+@test "MEM 6. pl-mem gt: is true" {
   __pl-mem_total() {
     echo 1024
   }
@@ -68,7 +68,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem gt: is false" {
+@test "MEM 7. pl-mem gt: is false" {
   __pl-mem_total() {
     echo 1024
   }
@@ -80,7 +80,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 # is256m
 
-@test "pl-mem is256m: is true" {
+@test "MEM 8. pl-mem is256m: is true" {
   __pl-mem_total() {
     echo 255
   }
@@ -91,7 +91,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is256m: is false (greater than)" {
+@test "MEM 9. pl-mem is256m: is false (greater than)" {
   __pl-mem_total() {
     echo 257
   }
@@ -104,7 +104,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 # is512m
 
-@test "pl-mem is512m: is true" {
+@test "MEM 10. pl-mem is512m: is true" {
   __pl-mem_total() {
     echo 511
   }
@@ -115,7 +115,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is512m: is false (less than)" {
+@test "MEM 11. pl-mem is512m: is false (less than)" {
   __pl-mem_total() {
     echo 255
   }
@@ -126,7 +126,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is512m: is false (greater than)" {
+@test "MEM 12. pl-mem is512m: is false (greater than)" {
   __pl-mem_total() {
     echo 513
   }
@@ -139,7 +139,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 # is1g
 
-@test "pl-mem is1g: is true" {
+@test "MEM 13. pl-mem is1g: is true" {
   __pl-mem_total() {
     echo 1023
   }
@@ -150,7 +150,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is1g: is false (less than)" {
+@test "MEM 14. pl-mem is1g: is false (less than)" {
   __pl-mem_total() {
     echo 511
   }
@@ -161,7 +161,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is1g: is false (greater than)" {
+@test "MEM 15. pl-mem is1g: is false (greater than)" {
   __pl-mem_total() {
     echo 1025
   }
@@ -174,7 +174,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 # is2g
 
-@test "pl-mem is2g: is true" {
+@test "MEM 16. pl-mem is2g: is true" {
   __pl-mem_total() {
     echo 2047
   }
@@ -185,7 +185,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is2g: is false (less than)" {
+@test "MEM 17. pl-mem is2g: is false (less than)" {
   __pl-mem_total() {
     echo 1023
   }
@@ -196,7 +196,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is2g: is false (greater than)" {
+@test "MEM 18. pl-mem is2g: is false (greater than)" {
   __pl-mem_total() {
     echo 2049
   }
@@ -209,7 +209,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 # is4g
 
-@test "pl-mem is4g: is true" {
+@test "MEM 19. pl-mem is4g: is true" {
   __pl-mem_total() {
     echo 4095
   }
@@ -220,7 +220,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is4g: is false (less than)" {
+@test "MEM 20. pl-mem is4g: is false (less than)" {
   __pl-mem_total() {
     echo 2047
   }
@@ -231,7 +231,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is4g: is false (greater than)" {
+@test "MEM 21. pl-mem is4g: is false (greater than)" {
   __pl-mem_total() {
     echo 4097
   }
@@ -244,7 +244,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 # is8g
 
-@test "pl-mem is8g: is true" {
+@test "MEM 22. pl-mem is8g: is true" {
   __pl-mem_total() {
     echo 8191
   }
@@ -255,7 +255,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is8g: is false (less than)" {
+@test "MEM 23. pl-mem is8g: is false (less than)" {
   __pl-mem_total() {
     echo 4095
   }
@@ -266,7 +266,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem is8g: is false (greater than)" {
+@test "MEM 24. pl-mem is8g: is false (greater than)" {
   __pl-mem_total() {
     echo 8193
   }
@@ -277,14 +277,14 @@ source "${BATS_TEST_DIRNAME}/../pishlib-mem" >/dev/null 2>/dev/null
 
 }
 
-@test "pl-mem ramdisk: " {
+@test "MEM 25. pl-mem ramdisk: " {
   skip "Yet to be implemented"
 }
 
-@test "pl-mem zswap: " {
+@test "MEM 26. pl-mem zswap: " {
   skip "Yet to be implemented"
 }
 
-@test "pl-mem swap: " {
+@test "MEM 27. pl-mem swap: " {
   skip "Yet to be implemented"
 }
