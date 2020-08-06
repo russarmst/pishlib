@@ -62,7 +62,7 @@ __pl-gpu_get_mem() {
 
 __pl-gpu_get_default_mem() {
   # TODO: this needs testing
-  if [[ "$(pl-model is1)" ]] || [[ "$(pl-model isZero)" ]]; then
+  if [[ "$(pl-model is1)" -eq 0 ]] || [[ "$(pl-model isZero)" -eq 0 ]]; then
       __gpu_mem=64
   else
       __gpu_mem=76
