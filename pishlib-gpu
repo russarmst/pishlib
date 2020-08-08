@@ -9,7 +9,6 @@ pl-gpu_mem() {
   case $1 in
 
     "")
-        # TODO: this needs testing
       __pl-gpu_get_mem
       ;;
 
