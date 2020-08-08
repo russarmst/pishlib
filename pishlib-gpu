@@ -1,4 +1,5 @@
 source pishlib-model
+source pishlib-mem
 
 BOOT_CONF_FILE="/boot/config.txt"
 VCGENCMD="/usr/bin/vcgencmd"
