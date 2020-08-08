@@ -21,14 +21,14 @@ pl-gpu_mem() {
 
     max)
       # TODO: this needs testing
-      if [[ "$(pl-sys_mem is256m)" ]]; then
-          pl-gpu_mem=128
-      elif [[ "$(pl-sys_mem is512m)" ]]; then
-          pl-gpu_mem=384
-      elif [[ "$(pl-mem_greater 512)" ]]; then
-          pl-gpu_mem=512
+      if [[ "$(pl-mem is256m)" ]]; then
+          __gpu_mem=128
+      elif [[ "$(pl-mem is512m)" ]]; then
+          __gpu_mem=384
+      elif [[ "$(pl-mem gt 512)" ]]; then
+          __gpu_mem=512
       fi
-      __pl-gpu_set "$pl-gpu_mem"
+      __pl-gpu_set "$__gpu_mem"
       ;;
 
     *)
