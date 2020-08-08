@@ -105,3 +105,8 @@ EOF
   run __pl-gpu_get_default_mem
   assert_output "76"
 }
+
+@test "GPU 10. pl-gpu_mem: Returns int of GPU memory allocated" {
+  run pl-gpu_mem
+  assert_output --regexp '^[0-9]+$'
+}
