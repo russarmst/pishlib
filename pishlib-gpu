@@ -14,9 +14,7 @@ pl-gpu_mem() {
       ;;
 
     default)
-      # TODO: this needs testing
-      pl-gpu_mem="$(__pl-gpu_get_default_mem)"
-      __pl-gpu_set "$pl-gpu_mem"
+      __pl-gpu_set "$(__pl-gpu_get_default_mem)"
       ;;
 
     max)
