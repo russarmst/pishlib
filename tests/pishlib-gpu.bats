@@ -110,3 +110,11 @@ EOF
   run pl-gpu_mem
   assert_output --regexp '^[0-9]+$'
 }
+@test "GPU 11. pl-gpu_mem default: Sets gpu_mem in /boot/config.txt to int." {
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run pl-gpu_mem default
+  run echo "$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')"
+  assert_output --regexp '^[0-9]+$'
+  rm $BOOT_CONF_FILE
+}
