@@ -35,8 +35,8 @@ pl-gpu_mem() {
 }
  
 __pl-gpu_get_mem() {
-  # extract gpu_mem int from /boot/config.txt, may be ""
-  __gpu_mem="$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')"
+  # extract gpu_mem int from config, it may return ""
+  __gpu_mem="$(sed 's/[^0-9]*//g' $BOOT_CONF_FILE)"
 
   if [[ -f $VCGENCMD ]]; then
     # best option if we have vcgencmd
