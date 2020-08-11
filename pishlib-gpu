@@ -55,7 +55,8 @@ __pl-gpu_get_default_mem() {
   else
       __gpu_mem=76
   fi
-  echo $__gpu_mem
+  echo $"__gpu_mem"
+}
 
 __pl-gpu_get_max_mem() {
   if [[ "$(pl-mem is256m)" ]]; then
