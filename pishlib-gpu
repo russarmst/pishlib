@@ -79,10 +79,10 @@ __pl-gpu_insane_setting() {
 __pl-gpu_set() {
   if [[ $(grep -E ".*#.*gpu_mem" $BOOT_CONF_FILE) ]]; then
     # gpu_mem in config.txt but commented out
-    sed -Eri "s/^.*#.*gpu_mem=[0-9]+$/gpu_mem=$1/g" $BOOT_CONF_FILE
+    sed -Eri "s/^.*#.*gpu_mem=[0-9]*$/gpu_mem=$1/g" $BOOT_CONF_FILE
   elif [[ $(grep "gpu_mem" $BOOT_CONF_FILE) ]]; then
     # gpu_mem in config.txt
-    sed -Eri "s/^gpu_mem=[0-9]+$/gpu_mem=$1/g" $BOOT_CONF_FILE
+    sed -Eri "s/^gpu_mem=[0-9]*$/gpu_mem=$1/g" $BOOT_CONF_FILE
   else
     # gpu_mem not in config.txt
     echo "gpu_mem=$1" >> $BOOT_CONF_FILE
