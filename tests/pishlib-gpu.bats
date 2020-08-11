@@ -106,15 +106,51 @@ EOF
   assert_output "76"
 }
 
-@test "GPU 10. pl-gpu_mem: Returns int of GPU memory allocated" {
+@test "GPU 10. __pl-gpu_get_max_mem: RPi model has 256mb." {
+  skip "TODO: implement test."
+}
+
+@test "GPU 11. __pl-gpu_get_max_mem: RPi model has 512mb." {
+  skip "TODO: implement test."
+}
+
+@test "GPU 12. __pl-gpu_get_max_mem: RPi model has more than 512mb." {
+  skip "TODO: implement test."
+}
+
+
+@test "GPU 13. __pl-gpu_insane setting: sanity check for integer for __pl-gpu_set. Sane." {
+  skip "TODO: implement test."
+}
+
+@test "GPU 14. __pl-gpu_insane setting: sanity check for integer for __pl-gpu_set. Insane." {
+  skip "TODO: implement test."
+}
+
+@test "GPU 15. pl-gpu_mem: Returns int of GPU memory allocated" {
   run pl-gpu_mem
   assert_output --regexp '^[0-9]+$'
 }
-@test "GPU 11. pl-gpu_mem default: Sets gpu_mem in /boot/config.txt to int." {
+
+@test "GPU 16. pl-gpu_mem default: Sets gpu_mem default to int." {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
   run pl-gpu_mem default
   run echo "$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')"
   assert_output --regexp '^[0-9]+$'
   rm $BOOT_CONF_FILE
+}
+
+@test "GPU 17. pl-gpu_mem max: Sets gpu_mem to max reccommended." {
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run pl-gpu_mem max
+  run echo "$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')"
+  assert_output --regexp '^[0-9]+$'
+  rm $BOOT_CONF_FILE
+}
+
+@test "GPU 18. pl-gpu_mem integer: Sets gpu_mem to integer." {
+  run pl-gpu_mem
+  assert_output --regexp '^[0-9]+$'
 }
