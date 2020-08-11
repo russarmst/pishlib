@@ -68,6 +68,12 @@ __pl-gpu_get_max_mem() {
   echo $"__gpu_mem"
 }
 
+__pl-gpu_insane_setting() {
+  # less than 16 may prevent pi from booting
+  # more than 1024 doesn't make sense
+  if [[ "$1" -lt 16 ]] || [[ "$1" -gt 1024 ]]; then
+    echo 0
+  fi
 }
 
 __pl-gpu_set() {
