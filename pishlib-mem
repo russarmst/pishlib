@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 pl_mem() {   
 
     case $1 in
