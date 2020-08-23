@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pl-model() {
+pl_model() {
 
   case $1 in
 
@@ -10,7 +10,7 @@ pl-model() {
       ;;
 
     is1)
-      if [[ $(__pl-model_generation $(__pl-model_rev_code)) -eq 1 ]]; then
+      if [[ $(__pl_model_generation $(__pl_model_rev_code)) -eq 1 ]]; then
         return 0
       else
         return 1
@@ -18,7 +18,7 @@ pl-model() {
       ;;
 
     is2)
-      if [[ $(__pl-model_generation $(__pl-model_rev_code)) -eq 2 ]]; then
+      if [[ $(__pl_model_generation $(__pl_model_rev_code)) -eq 2 ]]; then
         return 0
       else
         return 1
@@ -26,8 +26,8 @@ pl-model() {
       ;;
 
     is3)
-      rev=$(__pl-model_rev_code)
-      gen=$(__pl-model_generation $(rev)) 
+      rev=$(__pl_model_rev_code)
+      gen=$(__pl_model_generation $(rev)) 
       if [[ $(gen)=3 ]]; then
         return 0
       else
@@ -36,7 +36,7 @@ pl-model() {
       ;;
 
     is4)
-      if [[ $(__pl-model_generation $(__pl-model_rev_code)) -eq 4 ]]; then
+      if [[ $(__pl_model_generation $(__pl_model_rev_code)) -eq 4 ]]; then
         return 0
       else
         return 1
@@ -57,11 +57,11 @@ pl-model() {
 }
 
 
-__pl-model_rev_code() {
+__pl_model_rev_code() {
   echo $(awk '/Revision/ {print $3}' /proc/cpuinfo)
 }
 
-__pl-model_generation() {
+__pl_model_generation() {
   echo $(awk -v rev_code="$1" '$1==rev_code {print $2}' ./pi_model_data.txt)
 }
 
