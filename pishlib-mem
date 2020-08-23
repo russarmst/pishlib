@@ -1,39 +1,39 @@
-pl-mem() {   
+pl_mem() {   
 
     case $1 in
 
       "")
         # Get system mem Size. Return int as Mb
-        echo $(__pl-mem_total)
+        echo $(__pl_mem_total)
         ;;
 
       eq)
         # System mem = $2? Return bool.
-        [[ $(__pl-mem_total) -eq $2 ]]
+        [[ $(__pl_mem_total) -eq $2 ]]
         ;;
 
       lt)
         # System mem < to $2? Return bool.
-        [[ $(__pl-mem_total) -lt $2 ]]
+        [[ $(__pl_mem_total) -lt $2 ]]
         ;;
 
       gt)
         # System mem > to $2? Return bool.
-        [[ $(__pl-mem_total) -gt $2 ]]
+        [[ $(__pl_mem_total) -gt $2 ]]
         ;;
 
       ramdisk)
-        __pl-mem_rdisk
+        __pl_mem_rdisk
         return $?
       ;;
 
       zswap)
-        __pl-mem_zswap
+        __pl_mem_zswap
         return $?
       ;;
 
       swap)
-        __pl-mem_swap
+        __pl_mem_swap
         return $?
       ;;
 
@@ -44,19 +44,19 @@ pl-mem() {
     esac
 }
 
-__pl-mem_total () {
+__pl_mem_total () {
     mem=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
     echo $(( $mem / 1024 ))
 }
 
-__pl-mem_rdisk() {
+__pl_mem_rdisk() {
   return
 }
 
-__pl-mem_zswap() {
+__pl_mem_zswap() {
   return
 }
 
-__pl-mem_swap() {
+__pl_mem_swap() {
   return
 }
