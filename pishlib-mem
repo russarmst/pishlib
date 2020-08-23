@@ -22,31 +22,6 @@ pl-mem() {
         [[ $(__pl-mem_total) -gt $2 ]]
         ;;
 
-      is256m)
-        [[ $(__pl-mem_total) -lt 256 ]]
-      ;;
-
-      is512m)
-        [[ $(__pl-mem_total) -lt 512 ]] && [[ $(__pl-mem_total) -gt 256 ]]
-      ;;
-
-      is1g)
-        [[ $(__pl-mem_total) -lt 1024 ]] && [[ $(__pl-mem_total) -gt 512 ]]
-      ;;
-
-      is2g)
-        [[ $(__pl-mem_total) -lt 2048 ]] && [[ $(__pl-mem_total) -gt 1024 ]]
-      ;;
-
-
-      is4g)
-        [[ $(__pl-mem_total) -lt 4096 ]] && [[ $(__pl-mem_total) -gt 2048 ]]
-      ;;
-
-      is8g)
-        [[ $(__pl-mem_total) -lt 8192 ]] && [[ $(__pl-mem_total) -gt 4096 ]]
-      ;;
-
       ramdisk)
         __pl-mem_rdisk
         return $?
