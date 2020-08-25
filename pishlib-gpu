@@ -70,8 +70,8 @@ __pl_gpu_mem_get_max() {
 
 __pl_gpu_setting_is_sane() {
   # less than 16 may prevent pi from booting
-  # more than 1024 doesn't make sense
-  if [[ "$1" -lt 16 ]] || [[ "$1" -gt 1024 ]]; then
+  # more than 512 doesn't make sense
+  if [[ "$1" -lt 16 ]] || [[ "$1" -gt 512 ]]; then
     echo 0
   fi
 }
