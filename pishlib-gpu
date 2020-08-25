@@ -77,14 +77,29 @@ __pl_gpu_setting_is_sane() {
 }
 
 __pl_gpu_mem_set() {
-  if [[ $(grep -E ".*#.*gpu_mem" $BOOT_CONF_FILE) ]]; then
-    # gpu_mem in config.txt but commented out
-    sed -Eri "s/^.*#.*gpu_mem=[0-9]*$/gpu_mem=$1/g" $BOOT_CONF_FILE
-  elif [[ $(grep "gpu_mem" $BOOT_CONF_FILE) ]]; then
-    # gpu_mem in config.txt
-    sed -Eri "s/^gpu_mem=[0-9]*$/gpu_mem=$1/g" $BOOT_CONF_FILE
+  if [[ $(__pl_gpu_mem_setting_commented_in_conf) ]]; then
+    __pl_gpu_mem_setting_uncomment
+    __pl_gpu_mem_setting_update $1
+  elif [[ $(__pl_gpu_mem_setting_in_conf) ]]; then
+    __pl_gpu_mem_setting_update $1
   else
     # gpu_mem not in config.txt
     echo "gpu_mem=$1" >> $BOOT_CONF_FILE
   fi
+}
+
+__pl_gpu_mem_setting_in_conf() {
+  [[ $(grep -E ".*gpu_mem" $BOOT_CONF_FILE) ]]
+}
+
+__pl_gpu_mem_setting_commented_in_conf() {
+  [[ $(grep -E ".*#.*gpu_mem" $BOOT_CONF_FILE) ]]
+}
+
+__pl_gpu_mem_setting_uncomment() {
+  sed -Eri "s/^.*#.*gpu_mem=([0-9])*$/gpu_mem=\1/g" $BOOT_CONF_FILE
+}
+
+__pl_gpu_mem_setting_update() {
+  sed -Eri "s/^.*gpu_mem=[0-9]*$/gpu_mem=$1/g" $BOOT_CONF_FILE
 }
