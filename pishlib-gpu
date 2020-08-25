@@ -9,67 +9,66 @@ pl_gpu_mem() {
   case $1 in
 
     "")
-      __pl_gpu_get_mem
+      __pl_gpu_mem_get
       ;;
 
     default)
-      __pl_gpu_set "$(__pl_gpu_get_default_mem)"
+      __pl_gpu_mem_set "$(__pl_gpu_mem_get_default)"
       ;;
 
     max)
-      # TODO: this needs testing
-      __pl_gpu_set "$(__pl_gpu_get_max_mem)"
+      __pl_gpu_mem_set "$(__pl_gpu_mem_get_max)"
+      ;;
+
+    set)
+      __pl_gpu_mem_set "$2"
       ;;
 
     *)
-      # TODO: this needs testing
-      if [[ $(__pl_gpu_insane_setting $1) ]]; then
-        return 1
-      elif ! [[ $(__pl_gpu_insane_setting $1) ]]; then
-        __pl_gpu_set "$1"
-      else
-        return 1
-      fi
+      return 1
       ;;
   esac
 }
  
-__pl_gpu_get_mem() {
-  # extract gpu_mem int from config, it may return ""
-  __gpu_mem="$(sed 's/[^0-9]*//g' $BOOT_CONF_FILE)"
+__pl_gpu_mem_get() {
+  # extract gpu_mem int from config; it may return "".
+  local __gpu_mem="$(sed 's/[^0-9]*//g' $BOOT_CONF_FILE)"
 
   if [[ -f $VCGENCMD ]]; then
-    # best option if we have vcgencmd
-    __gpu_mem=$("$VCGENCMD" get_mem gpu | sed 's/[^0-9]*//g')
+    # vcgencmd will give most accurate result.
+    local __gpu_mem=$("$VCGENCMD" get_mem gpu | sed 's/[^0-9]*//g')
   elif [[ $__gpu_mem -eq "" ]]; then
-    # gpu_mem not defined in /boot/config.txt
-    __gpu_mem=$(__pl_gpu_get_default_mem)
+    # If not defined in $BOOT_CONF_FILE and vcgencmd isn't available gpu_mem must be default
+    local __gpu_mem=$(__pl_gpu_mem_get_default)
   fi
+  
   echo "$__gpu_mem"
 }
 
-__pl_gpu_get_default_mem() {
+__pl_gpu_mem_get_default() {
   # TODO: this needs testing
+  # TODO: refactor this to use `pl_mem lt` and `pl_mem gt`
   if [[ "$(pl-model is1)" -eq 0 ]] || [[ "$(pl-model isZero)" -eq 0 ]]; then
-      __gpu_mem=64
+      local __gpu_mem=64
   else
-      __gpu_mem=76
+      local __gpu_mem=76
   fi
   echo $"__gpu_mem"
 }
 
-__pl_gpu_get_max_mem() {
-  if [[ "$(pl-mem is256m)" ]]; then
+__pl_gpu_mem_get_max() {
+  # TODO: refactor to use new `pl_mem is` function
+  if [[ "$(pl_mem is256m)" ]]; then
     __gpu_mem=128
-  elif [[ "$(pl-mem is512m)" ]]; then
+  elif [[ "$(pl_mem is512m)" ]]; then
     __gpu_mem=384
-  elif [[ "$(pl-mem gt 512)" ]]; then
+  elif [[ "$(pl_mem gt 512)" ]]; then
     __gpu_mem=512
   fi
   echo $"__gpu_mem"
 }
 
-__pl_gpu_insane_setting() {
+__pl_gpu_setting_is_sane() {
   # less than 16 may prevent pi from booting
   # more than 1024 doesn't make sense
   if [[ "$1" -lt 16 ]] || [[ "$1" -gt 1024 ]]; then
@@ -77,7 +76,7 @@ __pl_gpu_insane_setting() {
   fi
 }
 
-__pl_gpu_set() {
+__pl_gpu_mem_set() {
   if [[ $(grep -E ".*#.*gpu_mem" $BOOT_CONF_FILE) ]]; then
     # gpu_mem in config.txt but commented out
     sed -Eri "s/^.*#.*gpu_mem=[0-9]*$/gpu_mem=$1/g" $BOOT_CONF_FILE
