@@ -59,8 +59,10 @@ pl_model() {
 }
 
 
-__pl_model_rev_code() {
-  echo $(awk '/Revision/ {print $3}' /proc/cpuinfo)
+__pl_model_revision_code() {
+  # For old RPis, "100" is prepended to the revision code if overvolted (waranty void)
+  # Strip "100" if necessary to return just the revision code.
+  echo $(awk "/^Revision/ {sub("^100", "", $3); print $3}" "$CPU_INFO_FILE")
 }
 
 __pl_model_generation() {
