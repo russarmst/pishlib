@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+CPU_INFO_FILE="/proc/cpuinfo"
+
 pl_model() {
 
   case $1 in
