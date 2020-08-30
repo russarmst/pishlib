@@ -17,9 +17,9 @@ pl_model() {
       echo "$(__pl_model_attribute $1)"
       ;;
 
-    is2)
-      if [[ $(__pl_model_generation $(__pl_model_rev_code)) -eq 2 ]]; then
-        return 0
+    summary)
+      # string in format of "<manufacturer> <memory> <processor> <revision> <type>"
+      echo "$(__pl_model_summary)"
       else
         return 1
       fi
