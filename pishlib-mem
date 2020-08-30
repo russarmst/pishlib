@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-pl_mem() {   
+source pishlib-model
+
+pl_mem() {
 
     case $1 in
 
@@ -22,6 +24,10 @@ pl_mem() {
       gt)
         # System mem > to $2? Return bool.
         [[ $(__pl_mem_as_mb) -gt $2 ]]
+        ;;
+
+      is)
+        [[ $(pl_model memory) -eq $2 ]]
         ;;
 
       ramdisk)
