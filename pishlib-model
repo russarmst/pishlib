@@ -122,6 +122,12 @@ __pl_model_new_rev_code_decode() {
   echo ${model_attribute_lookup_array[lookup_array_index]}
 }
 
-__pl-model_revision() {
-  echo $(awk '{print $7}' /sys/firmware/devicetree/base/model)
+__pl_model_summary() {
+  manu=$(__pl_model_attribute manufacturer)
+  mem=$(__pl_model_attribute memory)
+  proc=$(__pl_model_attribute processor)
+  rev=$(__pl_model_attribute revision)
+  typ=$(__pl_model_attribute type)
+  echo "$manu" "$mem" "$proc" "$rev" "$typ"
+
 }
