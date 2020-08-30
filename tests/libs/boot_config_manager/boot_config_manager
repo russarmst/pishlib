@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+case $1 in
+
+  append)
+    property=$2
+    value=$3
+    __bcm_append "$property" "$value"
+    ;;
+
+  change)
+    property=$2
+    value=$3
+    __bcm_change "$property" "$value"
+    ;;
+
+  delete)
+    property=$2
+    __bcm_delete "$property"
+    ;;
+
+  disable)
+    property=$2
+    __bcm_disable "$property"
+    ;;
+
+  enable)
+    property=$2
+    __bcm_enable "$property"
+    ;;
+
+  toggle)
+    property=$2
+    __bcm_toggle "$property"
+    ;;
+
+esac
+
+__bcm_delete() {
+  return
+}
+
+__bcm_append() {
+  return
+}
+
+__bcm_change() {
+  return
+}
+
+__bcm_disable() {
+  return
+}
+
+__bcm_enable() {
+  return
+}
+
+__bcm_toggle() {
+  return
+}
