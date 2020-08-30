@@ -13,12 +13,8 @@ pl_model() {
       printf "Revision Code: %s\n" $(__pl_model_revision_code)
       ;;
 
-    is1)
-      if [[ $(__pl_model_generation $(__pl_model_rev_code)) -eq 1 ]]; then
-        return 0
-      else
-        return 1
-      fi
+    manufacturer|memory|processor|revision|type)
+      echo "$(__pl_model_attribute $1)"
       ;;
 
     is2)
