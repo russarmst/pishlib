@@ -73,6 +73,33 @@ __pl_model_rev_code_is_new() {
     return 1
   fi
 }
+
+__pl_model_old_rev_code_decode() {
+  attribute=$1
+  rev_code=$2
+  declare -A model_attribute_lookup_lists=(
+    [0002]="Egoman 256 BCM2835 1 1B"
+    [0003]="Egoman 256 BCM2835 1 1B"
+    [0004]="Sony_UK 256 BCM2835 2 1B"
+    [0005]="Qisda 256 BCM2835 2 1B"
+    [0006]="Egoman 256 BCM2835 2 1B"
+    [0007]="Egoman 256 BCM2835 2 1A"
+    [0008]="Sony_UK 256 BCM2835 2 1A"
+    [0009]="Qisda 256 BCM2835 2 1A"
+    [000d]="Egoman 512 BCM2835 2 1B"
+    [000e]="Sony_UK 512 BCM2835 2 1B"
+    [000f]="Egoman 512 BCM2835 2 1B"
+    [0010]="Sony_UK 512 BCM2835 1.2 1B+"
+    [0011]="Sony_UK 512 BCM2835 1 CM1"
+    [0012]="Sony_UK 512 BCM2835 1.1 1A+"
+    [0013]="Embest 512 BCM2835 1.2 1B+"
+    [0014]="Embest 512 BCM2835 1 CM1"
+    [0015]="Embest 256 BCM2835 1.1 1A+"
+  )
+  declare -A model_attribute_lookup_index=([manufacturer]=1 [memory]=2 [processor]=3 [revision]=4 [type]=5)
+  local index=${model_attribute_lookup_index[attribute]}
+  declare -a model_attribute_lookup_array=(${model_attribute_lookup_lists[$index]})
+  echo $(model_attribute_lookup_array[index])
 }
 
 __pl-model_model() {
