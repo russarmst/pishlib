@@ -50,8 +50,8 @@ pl_model() {
       return 0
       ;;
 
-    isCompute)
-      # Return bool if model=PiCompute
+    *)
+      return 1
       return 0
       ;;
 
