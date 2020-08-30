@@ -5,8 +5,12 @@ pl_model() {
   case $1 in
 
     "")
-      echo $(awk '{print}' /sys/firmware/devicetree/base/model)
-      return 0
+      printf "Manufacturer: %s\n" $(__pl_model_attribute manufacturer)
+      printf "Memory: %s\n" $(__pl_model_attribute memory)
+      printf "Processor: %s\n" $(__pl_model_attribute processor)
+      printf "Revision: %s\n" $(__pl_model_attribute revision)
+      printf "Type: %s\n" $(__pl_model_attribute type)
+      printf "Revision Code: %s\n" $(__pl_model_revision_code)
       ;;
 
     is1)
