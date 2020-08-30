@@ -102,8 +102,24 @@ __pl_model_old_rev_code_decode() {
   echo $(model_attribute_lookup_array[index])
 }
 
-__pl-model_model() {
-  echo $(awk '{print $5}' /sys/firmware/devicetree/base/model)
+__pl_model_new_rev_code_decode() {
+  declare -A model_attribute_lookup_lists=(
+    [manufacturer]="Sony_UK Egoman Embest Sony_Japan Embest Stadium undefined undefined undefined undefined undefined undefined undefined undefined undefined undefined"
+    [memory]="256 512 1024 2048 4096 8192 undefined undefined undefined undefined undefined undefined undefined undefined undefined undefined"
+    [processor]="BCM2835 BCM2836 BCM2837 BCM2711 undefined undefined undefined undefined undefined undefined undefined undefined undefined undefined undefined undefined"
+    [revision]="0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"
+    [type]="1A 1B 1A+ 1B+ 2B Alpha CM1 unknown 3B Zero CM3 unknown Zero_W 3B+ 3A+ internal_use_only CM3+ 4B undefined undefined undefined"
+  )
+  declare -A revision_code_model_attribute_start_bit=( [manufacturer]=16 [memory]=10 [processor]=1 [revision]=0 [type]=4)
+  declare -A revision_code_model_attribute_bit_mask=( [manufacturer]=0xf [memory]=0x7 [processor]=0xf [revision]=0xf [type]=0xff )
+  local attribute=$1
+  local rev_code=$2
+  local start_bit=${revision_code_model_attribute_start_bit[$attribute]}
+  local bit_mask=${revision_code_model_attribute_bit_mask[$attribute]}
+  # isolate the lookup list for the attribute and convert it into an array
+  declare -a model_attribute_lookup_array=(${model_attribute_lookup_lists[$attribute]})
+  local lookup_array_index=$((0x"$rev_code" >> "$start_bit" & "$bit_mask"))
+  echo ${model_attribute_lookup_array[lookup_array_index]}
 }
 
 __pl-model_revision() {
