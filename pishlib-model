@@ -58,6 +58,16 @@ pl_model() {
   esac
 }
 
+__pl_model_attribute() {
+  local attribute=$1
+  local rev_code="$(__pl_model_revision_code)"
+  if [ $(__pl_model_rev_code_is_new "$rev_code") ]; then
+    local model_attribute="$(__pl_model_new_rev_code_decode $attribute $rev_code)"
+  else
+    local model_attribute="$(__pl_model_old_rev_code_decode $attribute $rev_code)"
+  fi
+  echo $model_attribute
+}
 
 __pl_model_revision_code() {
   # For old RPis, "100" is prepended to the revision code if overvolted (waranty void)
