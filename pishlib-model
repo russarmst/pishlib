@@ -65,8 +65,14 @@ __pl_model_revision_code() {
   echo $(awk "/^Revision/ {sub("^100", "", $3); print $3}" "$CPU_INFO_FILE")
 }
 
-__pl_model_generation() {
-  echo $(awk -v rev_code="$1" '$1==rev_code {print $2}' ./pi_model_data.txt)
+__pl_model_rev_code_is_new() {
+  rev_code=$1
+  if [ ${#rev_code} = 6 ]; then
+    return 0
+  else
+    return 1
+  fi
+}
 }
 
 __pl-model_model() {
