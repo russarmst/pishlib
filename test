@@ -1,2 +1,54 @@
-# Run this file to run all the tests, once
-./tests/libs/bats/bin/bats tests/*.bats
+#!/usr/bin/env bash
+
+
+case $1 in
+
+  all)
+    ./tests/libs/bats/bin/bats tests/*.bats
+    ;;
+
+  audio)
+
+    ;;
+
+  bt)
+
+    ;;
+
+  camera)
+
+    ;;
+  
+  cpu)
+
+    ;;
+
+  csi)
+
+    ;;
+
+  gpio)
+
+    ;;
+  
+  gpu)
+    ./tests/libs/bats/bin/bats tests/pishlib-gpu.bats
+    ;;
+
+  mem)
+    ./tests/libs/bats/bin/bats tests/pishlib-mem.bats
+    ;;
+
+  model)
+    ./tests/libs/bats/bin/bats tests/pishlib_model.bats
+    ;;
+
+  screen)
+
+    ;;
+
+  wifi)
+
+    ;;
+
+esac
