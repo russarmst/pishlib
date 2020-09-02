@@ -1,7 +1,7 @@
 # pishlib
 
 ## Introduction
-The aim of the **pi** **sh**ell **lib**rary (pishlib) is the Swiss Army Knife of shell scripting for the Pi range of computers by implementing elegant functions that make script writing easier, more robust and fun(?).
+The aim of the **pi** **sh**ell **lib**rary (pishlib) is to be the Swiss Army Knife of shell scripting for the Pi range of computers by implementing elegant functions that make script writing easier, more robust and fun(?).
 
 **Note:** For the time being this code should be regarded as Alpha where:
 * changes to the code and function names may break scripts using it
@@ -21,7 +21,7 @@ when you can write this:
 ```shell
 source /path/to/pishlib
 
-if pl-mem is4g; then
+if [[ $(pl_mem is 4096) ]]; then
     echo 'Your Pi has 4G of total system ram.'
 fi
 ```
@@ -33,28 +33,58 @@ fi
 * [Contributing](#Contributing)
 * [Functions](#Functions)
     - [Memory Functions](#Memory-Functions)
-        + [pl-mem](#pl-mem)
-        + [pl-mem lt xxxx](#pl-mem-lt-xxxx)
-        + [pl-mem gt xxxx](#pl-mem-gt-xxxx) 
-        + [pl-mem eq xxxx](#pl-mem-eq-xxxx)
-        + [pl-mem isxxx[m|g]](#pl-mem-isxxx[m|g])
-        + [pl-mem ramdisk](#pl-mem-ramdisk) 
-        + [pl-mem zswap](#pl-mem-zswap) 
-        + [pl-mem swap](#pl-mem-swap) 
+        + [pl_mem](#pl_mem)
+        + [pl_mem limit](#pl_mem-limit)
+        + [pl_mem lt](#pl_mem-lt)
+        + [pl_mem le](#pl_mem-le)
+        + [pl_mem gt](#pl_mem-gt) 
+        + [pl_mem ge](#pl_mem-ge) 
+        + [pl_mem eq](#pl_mem-eq)
+        + [pl_mem is](#pl_mem-is)
+        + [pl_mem ramdisk](#pl_mem-ramdisk) 
+        + [pl_mem zswap](#pl_mem-zswap) 
+        + [pl_mem swap](#pl_mem-swap) 
     - [GPU Functions](#gpu-Functions)
-        + [pl-gpu_mem](#pl-gpu_mem) 
-        + [pl-gpu_mem256](#pl-gpu_mem256) 
-        + [pl-gpu_mem512](#pl-gpu_mem512)
-        + [pl-gpu_mem1024](#pl-gpu_mem1024)
-        + [pl-gpu_temp](#pl-gpu_temp)
-    - [CPU functions](cpu-functions)
-        + [pl-cpu_id](#pl-cpu_id)
-        + [pl-cpu_max](#pl-cpu_max)
-        + [pl-cpu_min](#pl-cpu_min)
-        + [pl-cpu_ocd](#pl-cpu_ocd)
-        + [pl-cpu_oc](#pl-cpu_oc)
-        + [pl-cpu_gov](#pl-cpu_gov)
-        + [pl-cpu_temp](#pl-cpu_temp)
+        + [pl_gpu_mem](#pl_gpu_mem) 
+        + [pl_gpu_mem default](#pl_gpu_mem-deafult)
+        + [pl_gpu_mem set](#pl_gpu_mem-set)
+        + [pl_gpu_mem max](#pl_gpu_mem-max)
+        + [pl_gpu_mem gt](#pl_gpu_mem-gt)
+        + [pl_gpu_mem ge](#pl_gpu_mem-ge)
+        + [pl_gpu_mem lt](#pl_gpu_mem-lt)
+        + [pl_gpu_mem le](#pl_gpu_mem-le)
+        + [pl_gpu_mem set256](#pl_gpu_mem-set256)
+        + [pl_gpu_mem set512](#pl_gpu_mem-set512)
+        + [pl_gpu_mem set1024](#pl_gpu_mem-set1024)
+        + [pl_gpu_core temp](#pl_gpu_core-temp)
+        + [pl_gpu_core speed](#pl_gpu_core-speed)
+        + [pl_gpu_core oc](#pl_gpu_core-oc)
+    - [CPU functions](#cpu-functions)
+        + [pl_cpu id](#pl_cpu-id)
+        + [pl_cpu max](#pl_cpu-max)
+        + [pl_cpu min](#pl_cpu-min)
+        + [pl_cpu ocd](#pl_cpu-ocd)
+        + [pl_cpu oc](#pl_cpu-oc)
+        + [pl_cpu gov](#pl_cpu-gov)
+        + [pl_cpu temp](#pl_cpu-temp)
+    - [Model Functions](#model-functions)
+        + [pl_model](#pl_model)
+        + [pl_model manufacturer](#pl_model-manufacturer)
+        + [pl_model memory](#pl_model-memory)
+        + [pl_model processor](#pl_model-processor)
+        + [pl_model revision](#pl_model-revision)
+        + [pl_model type](#pl_model-type)
+        + [pl_model summary](#pl_model-summary)
+        + [pl_model gt](#pl_model-gt)
+        + [pl_model lt](#pl_model-lt)
+        + [pl_model eq](#pl_model-eq)
+        + [pl_model has_wifi](#pl_model-has_wifi)
+        + [pl_model has_lan](#pl_model-has_lan)
+        + [pl_model has_bt](#pl_model-has_bt)
+        + [pl_model csi](#pl_model-csi)
+        + [pl_model is32bit](#pl_model-is32bit)
+        + [pl_model is64bit](#pl_model-is64bit)     
+
 * [Credits](#Credits)
 * [TODO](#Todo)
 
@@ -69,7 +99,7 @@ pishlib is seperated into several different modules so you can source only those
 
 To include just the memory functions add the following to your script:
 ```shell
-source /path/to/pishlib-mem
+source /path/to/pishlib_mem
 ```
 
 To include all the pishlib functions in your script add the following:
@@ -97,34 +127,56 @@ cd /path/to/pishlib
 ```
 
 ## Functions
-pishlib contains many functions to query and control a Raspberry Pi from your script and are grouped by functionality .
+pishlib contains many functions to query, configure and control a Raspberry Pi from your script and are grouped by functionality.
 
 ### Memory Functions
-#### pl-mem
-Returns the amount of system memory as an intger in Mb.
+All pishlib memory functions report or compare memory in Mebibytes (MiB) and therefore where integer memory parameters are required they should also be in Mebibytes (MiB).
+
+#### pl_mem
+Without parameters returns the amount of system memory as an intger in Mebibytes (MiB).
+
+**Note: the amount of memory reported is that allocated to the ARM CPU. It will be less than the amount of RAM for the specific model of Raspberry Pi (`pl_model memory`) as a proportion of the RAM is allocated to the GPU.**
 
 Example:
 ```shell
-echo "Your Pi has $(pl-mem)Mb of system memory."
+echo "Your Pi has $(pl_mem)MiB of system memory."
 ```
 
-#### pl-mem lt xxxx
-Returns a boolean depending on the truthiness if the system memory is less than supplied integer (xxxx) in Mb.
+#### pl_mem limit
+This is used to force a Raspberry Pi to limit its memory capacity. Pass the total amount of RAM, in Mebibytes (MiB), you wish the Pi to use.
+
+This value of the parameter can between a minimum of 128MiB, and a maximum of the total memory installed on the board.
+
+* [ ] TODO: implement total_mem https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md
+
+#### pl_mem lt
+Returns a boolean depending on the truthiness if the system memory is less than the supplied integer in Mebibytes (MiB).
 
 Example:
 ```shell
-if [[ pl-mem lt 512 ]]; then
+if [[ $(pl_mem lt 512) ]]; then
     echo "Your Pi doesn't have the meet the minimum amount of system memory to run this programme."
     exit
 fi
 ```
 
-#### pl-mem gt xxxx
-Returns a boolean depending on the truthiness if the system memory is greater than supplied integer (xxxx) in Mb.
+#### pl_mem le
+Returns a boolean depending on the truthiness if the system memory is less than or equal to the supplied integer Mebibytes (MiB).
 
 Example:
 ```shell
-if [[ pl-mem gt 512 ]]; then
+if [[ $(pl_mem le 512) ]]; then
+    echo "Your Pi doesn't have the meet the minimum amount of system memory to run this programme."
+    exit
+fi
+```
+
+#### pl_mem gt
+Returns a boolean depending on the truthiness if the system memory is greater than supplied integer Mebibytes (MiB).
+
+Example:
+```shell
+if [[ $(pl_mem gt 512) ]]; then
     echo "Your Pi meets the minimum amount of system memory to run this programme."
     exit
 else
@@ -133,68 +185,92 @@ else
 fi
 ```
 
-#### pl-mem eq xxxx
-Returns a boolean depending on the truthiness if the system memory is equal to the supplied integer (xxxx) in Mb.
+#### pl_mem ge
+Returns a boolean depending on the truthiness if the system memory is greater than or equal to supplied integer Mebibytes (MiB).
 
 Example:
 ```shell
-    if [[ pl-mem eq 1024 ]]; then
-        echo "Your Pi has 1024Mb of system memory."
+if [[ $(pl_mem ge 512) ]]; then
+    echo "Your Pi meets the minimum amount of system memory to run this programme."
+    exit
+else
+    echo "Your Pi doesn't have the meet the minimum amount of system memory to run this programme."
+    exit
+fi
 ```
 
-#### pl-mem isxxx[m|g]
-Returns a boolean if the system memory is equal to xxx[m|g]. Valid values for xxx are 256m, 512m, 1g, 2g, 4g, or 8g.
+#### pl_mem eq
+Returns a boolean depending on the truthiness if the system memory is equal to the supplied integer Mebibytes (MiB).
+
+**Note:  the amount of memory tested is that allocated to the ARM CPU. It will be less than the amount of RAM for the specific model of Raspberry Pi as a proportion of RAM is allocated to the GPU. If you want to test if a Raspberry Pi has a certain amount of memory it maybe more appropriate to use `pl_model memory`.**
 
 Example:
 ```shell
-    if [[ pl-mem is1g ]]; then
+    if [[ $(pl_mem eq 1024) ]]; then
         echo "Your Pi has 1024Mb of system memory."
 ```
 
-#### pl-mem ramdisk
-Still todo. Intends to setup up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
+#### pl_mem is
+Returns a boolean if the system memory is equal to xxxx. The only sensible values for xxxx are 256, 512, 1024, 2048, 4096, or 8192.
+
+Example:
+```shell
+    if [[ $(pl_mem is 1024) ]]; then
+        echo "Your Pi has 1024kiB of memory."
+```
+
+#### pl_mem ramdisk
+* [ ] Todo: setup up a ramdisk for temporary files to preserve SD card life by preventing SD writes to ```/tmp```, ```/var/lock```, ```/var/log```, ```/var/run```, ```/var/spool/mqueue``` by deafult.
 
 **Note:** The default sizes have been adapted from the [Debian Mailing List](https://lists.debian.org/debian-devel/2011/04/msg00615.html)
 
-#### pl-mem zswap
-Still todo.
+#### pl_mem zswap
+* [ ] Todo: spec up and implement.
 
-#### pl-mem swap
-Still todo.
+#### pl_mem swap
+* [ ] Todo: spec up and implement.
 
 
 ### GPU Functions
-#### pl-gpu_mem
+#### pl_gpu_mem
 Function to report or set the amount of memory (in megabytes) to reserve for the exclusive use of the GPU, the remaining memory is allocated to the ARM CPU.
 
 ```shell
-pl-gpu_mem
+pl_gpu_mem
 ```
-Without a parameter pl-gpu_mem returns the current GPU memory allocation in megabytes. 
+Without a parameter pl_gpu_mem returns the current GPU memory allocation in megabytes. 
 
-**Note:** if your distribution doesn't include the `vcgencmd` program (included with Raspberry Pi OS) or you haven't installed it, the amount of GPU Memory reported will that configured in `/boot/config.txt`. If the `gpu_mem` in `/boot/config.txt` has been changed since the last reboot, the amount of GPU Memory reported will be inaccurate until after the next reboot. With `vcgencmd` in the path the amount of GPU Memory reported will always be accurate. 
+**Note:** if your distribution doesn't include the `vcgencmd` program (included with Raspberry Pi OS) or you haven't installed it, the amount of GPU Memory reported will be that configured in `/boot/config.txt`. If `gpu_mem` in `/boot/config.txt` has been changed since the last reboot, the amount of GPU Memory reported will be inaccurate until after the next reboot. With `vcgencmd` in the path the amount of GPU Memory reported will always be accurate. If `gpu_mem` is not specified in `/boot/config.txt` then the default gpu_mem allocation is reported as 64Mb if RAM<1Gb or 76 if RAM>1Gb.
 
-#### pl-gpu_mem xxx
-Sets the GPU memory to the integer megabytes. Example:
 
-```shell
-pl-gpu_mem 128
-```
-
-#### pl-gpu_mem default
+#### pl_gpu_mem default
 The GPU memory is set the following values:
-| Pi Model         | gpu_mem default value |
+| Pi Model Memory  | gpu_mem default value |
 |------------------|-----------------------|
-| Pi 1             | 64 |
-| Zero             | 64 |
-| All other models | 76 |
+| =< 1Gb           | 64                    |
+| > 1Gb            | 76                    |
+
+The new configuration won't take affect until after the next reboot.
 
 Example:
 ```shell
-pl-gpu_mem default
+pl_gpu_mem default
 ```
 
-#### pl-gpu_mem max
+
+#### pl_gpu_mem set
+Sets `gpu_mem` in `/boot/config.txt` to the integer supplied as a parameter. The new configuration won't take affect until after the next reboot.
+
+Example:
+```shell
+pl_gpu_mem set 128
+```
+**Note:** The new configuration won't take affect until after the next reboot.
+
+**Note:** On the Raspberry Pi 4 the 3D component of the GPU has its own memory management unit (MMU), and does not use memory from the gpu_mem allocation. Instead memory is allocated dynamically within Linux. This may allow a smaller value to be specified for gpu_mem on the Pi 4, compared to previous models.
+
+
+#### pl_gpu_mem max
 The GPU memory is set to the recommended max value depending on the total system memory as follows:
 
 | Total RAM      | gpu_mem recommended maximum |
@@ -203,95 +279,104 @@ The GPU memory is set to the recommended max value depending on the total system
 | 512MB          | 384 |
 | 1GB or greater | 512 |
 
-**Note:** The minimum value is 16, however this disables certain GPU features.
-
-**Note:** On the Raspberry Pi 4 the 3D component of the GPU has its own memory management unit (MMU), and does not use memory from the gpu_mem allocation. Instead memory is allocated dynamically within Linux. This may allow a smaller value to be specified for gpu_mem on the Pi 4, compared to previous models.
-
 Example:
 ```shell
-pl-gpu_mem max
+pl_gpu_mem max
 ```
 
-#### pl-gpu_mem gt xxx
-Tests if the memory allocated to the GPU is **Greater Than** than xxx which should be an integer in Megabytes.
+#### pl_gpu_mem gt
+Tests if the memory allocated to the GPU is **Greater Than** xxx which should be an integer in Megabytes.
 
 ```shell
     min_gpu_mem=128
-    if [[ pl-gpu_mem gt min_gpu_mem ]]; then
+    if [[ $(pl_gpu_mem gt min_gpu_mem) ]]; then
       echo "Your system has more than the minimum amount of GPU memory allocated."
     fi
 ```
 
-#### pl-gpu_mem lt xxx
-Tests if the memory allocated to the GPU is **Less Than** than xxx which should be an integer in Megabytes.
+#### pl_gpu_mem ge
+Tests if the memory allocated to the GPU is **Greater Than or Equal** to xxx which should be an integer in Megabytes.
 
 ```shell
     min_gpu_mem=128
-    if [[ pl-gpu_mem lt min_gpu_mem ]]; then
+    if [[ $(pl_gpu_mem ge min_gpu_mem) ]]; then
+      echo "Your system has more than the minimum amount of GPU memory allocated."
+    fi
+```
+
+#### pl_gpu_mem lt
+Tests if the memory allocated to the GPU is **Less Than** xxx which should be an integer in Megabytes.
+
+```shell
+    min_gpu_mem=128
+    if [[ $(pl_gpu_mem lt min_gpu_mem) ]]; then
       echo "Your system has less than the minimum amount of GPU memory allocated."
       exit
     fi
 ```
 
-#### pl-gpu_mem set256 xxx
-Sets the GPU memory (in megabytes) to xxx which should be an integer in Megabytes for Raspberry Pis with 256MB of memory. (It is ignored if memory size is not 256MB). This inserts or overwrites gpu_mem_256=xxx in /boot/config.txt. This overrides the gpu_mem setting in /boot/config.txx.
+#### pl_gpu_mem le
+Tests if the memory allocated to the GPU is **Less Than or Equal** to xxx which should be an integer in Megabytes.
+
+```shell
+    min_gpu_mem=128
+    if [[ $(pl_gpu_mem le min_gpu_mem) ]]; then
+      echo "Your system has less than the minimum amount of GPU memory allocated."
+      exit
+    fi
+```
+
+#### pl_gpu_mem [set256|set512|set1024]
+Sets the GPU memory (in megabytes) to xxx for Raspberry Pis with 256Mb|512Mb|1024Mb of memory. (It is ignored if memory size is not 256Mb|512Mb|1024Mb). This overrides the gpu_mem setting in /boot/config.txx.
 
 Setting this will allow swapping the boot drive between Pis with different amounts of RAM without having to edit /boot/config.txt each time.
 
-#### pl-gpu_mem set512 xxx
-Sets the GPU memory (in megabytes) to xxx which should be an integer in Megabytes for Raspberry Pis with 512MB of memory. (It is ignored if memory size is not 512MB). This inserts or overwrites gpu_mem_512=xxx in /boot/config.txt. This overrides the gpu_mem setting in /boot/config.txx.
-
-Setting this will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
-
-#### pl-gpu_mem set1024 xxx
-Sets the GPU memory (in megabytes) to xxx which should be an integer in Megabytes for Raspberry Pis with 1024MB of memory. (It is ignored if memory size is not 1024MB). This inserts or overwrites gpu_mem_1024=xxx in /boot/config.txt. This overrides the gpu_mem setting in /boot/config.txx.
-
-Setting this will allow swapping the boot drive between Pis with different amounts of RAM without having to edit config.txt each time.
-
-
-### pl-gpu_core temp
-Returns the temperature of the GPU core as an integer in degrees centigrade.
-
 Example:
 ```shell
-    g_temp=$(pl-gpu_temp)
-    echo "The GPU core is currently $g_temp degrees centigrade."
+pl_gpu_mem set256 64
 ```
 
-
-#### pl-gpu_core speed
-
-
-#### pl-gpu_core oc
+#### pl_gpu_core temp
+* [ ] TODO: to implement
+#### pl_gpu_core speed
+* [ ] TODO: to implement
+#### pl_gpu_core oc
+* [ ] TODO: to implement
 
 ### CPU functions
-#### pl-cpu_id
-#### pl-cpu_max
-#### pl-cpu_min
-#### pl-cpu_ocd
-#### pl-cpu_oc
-#### pl-cpu_gov
-#### pl-cpu_temp
+#### pl-cpu id
+#### pl-cpu max
+#### pl-cpu min
+#### pl-cpu ocd
+#### pl-cpu oc
+#### pl-cpu gov
+#### pl-cpu temp
 
 ### Model functions
-#### pl-model_is4
-#### pl-model_is3
-#### pl-model_is2
-#### pl-model_is1
-#### pl-model_isa
-#### pl-model_isb
-#### pl-model isplus
-#### pl-model_iscompute
-#### pl-model_iszero
-#### pl-model_greater
-#### pl-model_less
-#### pl-model_get
-#### pl-model_has_bt
-#### pl-model_has_wifi
-#### pl-model_has_net
-#### pl-model_hascsi
-#### pl-model_is32bit
-#### pl-model_is64bit
+#### pl_model
+Prints a summary of the Raspberry Pi attributes.
+
+#### pl_model manufacturer
+Returns the manufacturer of the Raspberry Pi board as a string.
+
+#### pl_model memory
+Returns the amount of memory installed as an integer in Mb.
+
+#### pl_model processor
+Returns the 
+
+#### pl_model revision
+#### pl_model type
+#### pl_model summary
+#### pl_model gt
+#### pl_model lt
+#### pl_model eq
+#### pl_model has_wifi
+#### pl_model has_lan
+#### pl_model has_bt
+#### pl_model has_csi
+#### pl_model is32bit
+#### pl_model is64bit
 
 ### GPIO functions
 
@@ -312,64 +397,3 @@ Example:
 * Russell Armstrong - original author and project maintainer
 
 ## TODO
-* [ ] Memory functions:
-    - [x] Identify how much total RAM the system has:
-        + [x] **pl-mem_is256m**
-        + [x] **pl-mem_is512m**
-        + [x] **pl-mem_is1g**
-        + [x] **pl-mem_is2g**
-        + [x] **pl-mem_is4g**
-        + [x] **pl-mem_is8g**
-        + [x] **pl-mem_total**
-        + [x] **pl-mem_greater**
-        + [x] **pl-mem_less**
-    - [ ] **pl-mem rdisk**
-        + [ ] complete spec'ing out function README.md
-    - [ ] **pl-mem zswap**
-        + [ ] investigate zswap
-        + [ ] spec out zswap
-    - [ ] **pl-mem swap**
-        + [ ] investigate swapiness
-        + [ ] spec out swapiness
-* [ ] GPU functions:
-    - [x] **pl-gpu_mem**
-        + [x] insert table into README.md of default values for each pi model
-        + [x] insert table into README.md of max recommended values for each pi model
-        + [x] insert examples for each invocation
-    - [ ] **pl-gpu_mem set256**
-        + [ ] insert example for invocation
-    - [ ] **pl-gpu_mem set512**
-        + [ ] insert example for invocation
-    - [ ] **pl-gpu_mem set1024**
-        + [ ] insert example for invocation
-    - [ ] **pl-gpu_temp**
-* [ ] CPU functions:
-    - [ ] Spec out functions in README.md
-    - [ ] **pl-cpu_id**
-    - [ ] **pl-cpu_max**
-    - [ ] **pl-cpu_min**
-    - [ ] **pl-cpu_ocd**
-    - [ ] **pl-cpu_oc**
-    - [ ] **pl-cpu_gov**
-    - [ ] **pl-cpu_temp**
-* [ ] GPIO functions:
-    - [ ] Spec out functions in README.md
-* [ ] Model functions:
-    - [ ] **pl-model_is4**
-    - [ ] **pl-model_is3**
-    - [ ] **pl-model_is2**
-    - [ ] **pl-model_is1**
-    - [ ] **pl-model_isa**
-    - [ ] **pl-model_isb**
-    - [ ] **pl-model isplus**
-    - [ ] **pl-model_iscompute**
-    - [ ] **pl-model_iszero**
-    - [ ] **pl-model_greater**
-    - [ ] **pl-model_less**
-    - [ ] **pl-model_get**
-    - [ ] **pl-model_has_bt**
-    - [ ] **pl-model_has_wifi**
-    - [ ] **pl-model_has_net**
-    - [ ] **pl-model_is32bit**
-    - [ ] **pl-model_is64bit**
-    - [ ] **pl-model_hascsi**
