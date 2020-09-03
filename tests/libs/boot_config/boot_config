@@ -14,13 +14,13 @@ boot_config(){
       __bc_append "$property" "$value"
       ;;
 
-    change_property)
+    change_property_value)
       local property=$2
       local value=$3
       __bc_change "$property" "$value"
       ;;
 
-    config_contains)
+    contains)
       local property=$2
       echo "$(__bc_contains property)"
       ;;
