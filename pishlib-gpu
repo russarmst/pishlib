@@ -54,7 +54,7 @@ __pl_gpu_mem_get_default() {
   else
       local __gpu_mem=76
   fi
-  echo $"__gpu_mem"
+  echo "$__gpu_mem"
 }
 
 __pl_gpu_mem_get_max() {
@@ -66,7 +66,7 @@ __pl_gpu_mem_get_max() {
   elif [[ "$(pl_mem gt 512)" ]]; then
     __gpu_mem=512
   fi
-  echo $"__gpu_mem"
+  echo "$__gpu_mem"
 }
 
 __pl_gpu_setting_is_sane() {
