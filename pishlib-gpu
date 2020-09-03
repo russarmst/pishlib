@@ -31,7 +31,7 @@ pl_gpu_mem() {
 }
  
 __pl_gpu_mem_get() {
-  # If gpu_mmem not defined $BOOT_CONF_FILE __gpu_mem will be "".
+  # If gpu_mem not defined $BOOT_CONF_FILE __gpu_mem will be "".
   local __gpu_mem="$(boot_config get_property_value gpu_mem)"
   
   if [[ -f $VCGENCMD ]]; then
@@ -46,7 +46,6 @@ __pl_gpu_mem_get() {
 }
 
 __pl_gpu_mem_get_default() {
-  # TODO: refactor this to use `pl_mem lt` and `pl_mem gt`
   if [[ "$(pl_mem lt 1024)"]]; then
       local __gpu_mem=64
   else
