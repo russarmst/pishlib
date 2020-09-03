@@ -58,10 +58,9 @@ __pl_gpu_mem_get_default() {
 }
 
 __pl_gpu_mem_get_max() {
-  # TODO: refactor to use new `pl_mem is` function
-  if [[ "$(pl_mem is256m)" ]]; then
+  if [[ "$(pl_mem is 256)" ]]; then
     __gpu_mem=128
-  elif [[ "$(pl_mem is512m)" ]]; then
+  elif [[ "$(pl_mem is 512)" ]]; then
     __gpu_mem=384
   elif [[ "$(pl_mem gt 512)" ]]; then
     __gpu_mem=512
