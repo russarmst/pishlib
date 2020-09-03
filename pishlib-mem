@@ -82,7 +82,7 @@ __pl_mem_swap() {
 }
 
 __pl_mem_limit() {
-  # TODO: added anity checking of mem_limit
+  # TODO: add sanity checking of mem_limit
   local mem_limit=$1
   if [[ $(boot_config contains total_mem) ]]; then
     boot_config change_property_value total_mem "$mem_limit"
