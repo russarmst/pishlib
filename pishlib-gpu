@@ -1,5 +1,6 @@
 source pishlib-model
 source pishlib-mem
+source ./libs/boot_config/boot_config
 
 BOOT_CONF_FILE="/boot/config.txt"
 VCGENCMD="/usr/bin/vcgencmd"
@@ -8,7 +9,7 @@ pl_gpu_mem() {
 
   case $1 in
 
-    "")
+    get)
       __pl_gpu_mem_get
       ;;
 
@@ -31,14 +32,14 @@ pl_gpu_mem() {
 }
  
 __pl_gpu_mem_get() {
-  # extract gpu_mem int from config; it may return "".
-  local __gpu_mem="$(sed 's/[^0-9]*//g' $BOOT_CONF_FILE)"
-
+  # If gpu_mmem not defined $BOOT_CONF_FILE __gpu_mem will be "".
+  local __gpu_mem="$(boot_config get_property_value gpu_mem)"
+  
   if [[ -f $VCGENCMD ]]; then
-    # vcgencmd will give most accurate result.
+    # vcgencmd will give most accurate result but may not be available on all distros.
     local __gpu_mem=$("$VCGENCMD" get_mem gpu | sed 's/[^0-9]*//g')
   elif [[ $__gpu_mem -eq "" ]]; then
-    # If not defined in $BOOT_CONF_FILE and vcgencmd isn't available gpu_mem must be default
+    # gpu_mem is set to default according to RAM size.
     local __gpu_mem=$(__pl_gpu_mem_get_default)
   fi
   
@@ -77,20 +78,10 @@ __pl_gpu_setting_is_sane() {
 }
 
 __pl_gpu_mem_set() {
-  if [[ $(__pl_gpu_mem_setting_in_conf) ]]; then
-    __pl_gpu_mem_setting_delete
+  local gpu_mem_size=$1
+  if [[ $(boot_config contains gpu_mem) ]]; then
+    boot_config change_property_value gpu_mem "$gpu_mem_size"
+  else
+    boot_config append_property gpu_mem "$gpu_mem_size"
   fi
-  __pl_gpu_mem_setting_append $1
-}
-
-__pl_gpu_mem_setting_in_conf() {
-  [[ $(grep -E ".*gpu_mem" $BOOT_CONF_FILE) ]]
-}
-
-__pl_gpu_mem_setting_delete() {
-  sed -Eri "s/^.*gpu_mem=([0-9])*$/d/g" $BOOT_CONF_FILE
-}
-
-__pl_gpu_mem_setting_append() {
-  echo "gpu_mem=$1" >> $BOOT_CONF_FILE
 }
