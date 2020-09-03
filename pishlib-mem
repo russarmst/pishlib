@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source pishlib-model
+source ./libs/boot_config/boot_config
 
 pl_mem() {
 
@@ -28,6 +29,11 @@ pl_mem() {
 
       is)
         [[ $(pl_model memory) -eq $2 ]]
+        ;;
+
+      limit)
+        __pl_mem_limit $2
+        return $?
         ;;
 
       ramdisk)
@@ -70,4 +76,13 @@ __pl_mem_zswap() {
 
 __pl_mem_swap() {
   return
+}
+
+__pl_mem_limit() {
+  local mem_limit=$1
+  if [[ $(boot_config contains total_mem) ]]; then
+    boot_config change_property_value total_mem "$mem_limit"
+  else
+    boot_config append_property total_mem "$mem_limit"
+  fi
 }
