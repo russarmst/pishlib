@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+__BOOT_CONFIG_FILE="/boot/config.txt"
+NONE_OR_MORE_CHARACTERS='.*'
+CAPTURE_GROUP_1='\1'
+
+boot_config(){
+
+  case $1 in
+
+    append_property)
+      local property=$2
+      local value=$3
+      __bc_append "$property" "$value"
+      ;;
+
+    change_property)
+      local property=$2
+      local value=$3
+      __bc_change "$property" "$value"
+      ;;
+
+    config_contains)
+      local property=$2
+      echo "$(__bc_contains property)"
+      ;;
+
+    delete_property)
+      local property=$2
+      __bc_delete "$property"
+      ;;
+
+    disable_property)
+      local property=$2
+      __bc_disable "$property"
+      ;;
+
+    enable_property)
+      local property=$2
+      __bc_enable "$property"
+      ;;
+
+    get_property_value)
+      local property=$2
+      echo "$(__bc_get_value $property)"
+      ;;
+
+    toggle_property_comment)
+      local property=$2
+      __bc_toggle "$property"
+      ;;
+
+  esac
+}
+
+__bc_append() {
+    echo "$1=$2" >> $__BOOT_CONFIG_FILE
+}
+
+__bc_change() {
+  local property=$1
+  local value=$2
+  __bc_delete "$property"
+  __bc_append "$property" "$value"
+}
+
+__bc_contains() {
+  [[ "$(grep -E ".*$1" $__BOOT_CONFIG_FILE)" ]]
+}
+
+__bc_delete() {
+    sed -Ei "/$1/d" "$__BOOT_CONFIG_FILE"
+  return
+}
+
+__bc_disable() {
+  local property=$1
+  local search_pattern="($property$NONE_OR_MORE_CHARACTERS)"
+  sed -Ei "s/$search_pattern/#$CAPTURE_GROUP_1/g" "$__BOOT_CONFIG_FILE"
+}
+
+__bc_enable() {
+  local property=$1
+  local search_pattern="$NONE_OR_MORE_CHARACTERS#$NONE_OR_MORE_CHARACTERS($property$NONE_OR_MORE_CHARACTERS)"
+  sed -Ei "s/$search_pattern/$CAPTURE_GROUP_1/g" "$__BOOT_CONFIG_FILE"
+}
+
+__bc_get_value() {
+  echo $(sed -Enr "s/.*$1=(.*)/\1/p" "$__BOOT_CONFIG_FILE")
+}
+
+__bc_toggle() {
+  local property=$1
+  if [[ $(__bc_property_is_enabled "$property") ]]; then
+    __bc_disable $1
+  else
+    __bc_enable $1
+  fi
+}
+
+__bc_property_is_enabled() {
+  # "#" before property
+  local property=$1
+  local search_pattern="$NONE_OR_MORE_CHARACTERS#$NONE_OR_MORE_CHARACTERS$property$NONE_OR_MORE_CHARACTERS"
+  [[ $(awk "/$search_pattern/" "$__BOOT_CONFIG_FILE") = "" ]]
+}
