@@ -8,22 +8,18 @@ pl_mem() {
     case $1 in
 
       "")
-        # Get system mem Size. Return int as Mb
         echo $(__pl_mem_as_mb)
         ;;
 
       eq)
-        # System mem = $2? Return bool.
         [[ $(__pl_mem_as_mb) -eq $2 ]]
         ;;
 
       lt)
-        # System mem < to $2? Return bool.
         [[ $(__pl_mem_as_mb) -lt $2 ]]
         ;;
 
       gt)
-        # System mem > to $2? Return bool.
         [[ $(__pl_mem_as_mb) -gt $2 ]]
         ;;
 
@@ -37,16 +33,20 @@ pl_mem() {
         ;;
 
       ramdisk)
+      # TODO: break out into seperate module
+      
         __pl_mem_rdisk
         return $?
       ;;
 
       zswap)
+      # TODO: break out into seperate module
         __pl_mem_zswap
         return $?
       ;;
 
       swap)
+      # TODO: break out into seperate module
         __pl_mem_swap
         return $?
       ;;
@@ -67,18 +67,22 @@ __pl_get_mem_as_kb() {
 }
 
 __pl_mem_rdisk() {
+  # TODO: break out into seperate module
   return
 }
 
 __pl_mem_zswap() {
+  # TODO: break out into seperate module
   return
 }
 
 __pl_mem_swap() {
+  # TODO: break out into seperate module
   return
 }
 
 __pl_mem_limit() {
+  # TODO: added anity checking of mem_limit
   local mem_limit=$1
   if [[ $(boot_config contains total_mem) ]]; then
     boot_config change_property_value total_mem "$mem_limit"
