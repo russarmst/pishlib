@@ -47,9 +47,8 @@ __pl_gpu_mem_get() {
 }
 
 __pl_gpu_mem_get_default() {
-  # TODO: this needs testing
   # TODO: refactor this to use `pl_mem lt` and `pl_mem gt`
-  if [[ "$(pl-model is1)" -eq 0 ]] || [[ "$(pl-model isZero)" -eq 0 ]]; then
+  if [[ "$(pl-mem lt 1024)"]]; then
       local __gpu_mem=64
   else
       local __gpu_mem=76
