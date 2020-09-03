@@ -1,4 +1,3 @@
-source pishlib-model
 source pishlib-mem
 source ./libs/boot_config/boot_config
 
