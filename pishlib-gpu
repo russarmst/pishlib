@@ -68,14 +68,17 @@ __pl_gpu_mem_get_max() {
 
 __pl_gpu_setting_is_sane() {
   # less than 16 may prevent pi from booting
-  # more than 512 doesn't make sense
-  if [[ "$1" -lt 16 ]] || [[ "$1" -gt 512 ]]; then
-    echo 0
+  # greater than 512 doesn't make sense
+  if [[ "$1" -gt 16 ]] || [[ "$1" -lt 512 ]]; then
+    return 0
   fi
 }
 
 __pl_gpu_mem_set() {
   local gpu_mem_size=$1
+  if [[ ! $(__pl_gpu_setting_is_sane) ]]; then
+    return 1
+  fi
   if [[ $(boot_config contains gpu_mem) ]]; then
     boot_config change_property_value gpu_mem "$gpu_mem_size"
   else
