@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+# WARNING: Here be dragons!
+# Refer to  https://www.raspberrypi.org/documentation/configuration/config-txt/overclocking.md
+
+pl_overclock() {
+  case $1 in
+    cpu_freq)
+      __pl_oc_cpu_freq
+      return $?
+      ;;
+    cpu_freq_min)
+      __pl_oc_cpu_freq_min
+      return $?
+      ;;
+    gpu_freq)
+      __pl_oc_gpu_freq
+      return $?
+      ;;
+    gpu_freq_min)
+      __pl_oc_gpu_freq_min
+      return $?
+      ;;
+    over_voltage)
+      __pl_oc_overvoltage
+      return $?
+      ;;
+    over_voltage_min)
+      __pl_oc_overvoltage_min
+      return $?
+      ;;
+    over_voltage_sdram)
+      __pl_oc_overvoltage_sdram
+      return $?
+      ;;
+    sdram_freq)
+      __pl_oc_sdram_freq
+      return $?
+      ;;
+    sdram_freq_min)
+      __pl_oc_sdram_freq_min
+      return $?
+      ;;
+    temp_limit)
+      __pl_oc_temp_limit
+      return $?
+      ;;
+    temp_soft_limit)
+      # 3A+/3B+ only
+      __pl_oc_temp_soft_limit
+      return $?
+      ;;
+  esac
+}
+
+__pl_oc_cpu_freq() {
+  return
+}
+
+__pl_oc_cpu_freq_min() {
+  return
+}
+
+__pl_oc_gpu_freq() {
+  return
+}
+
+__pl_oc_gpu_freq_min() {
+  return
+}
+
+__pl_oc_overvoltage() {
+  return
+}
+
+__pl_oc_overvoltage_min() {
+  return
+}
+
+__pl_oc_overvoltage_sdram() {
+  return
+}
+
+__pl_oc_sdram_freq() {
+  return
+}
+
+__pl_oc_sdram_freq_min() {
+  return
+}
+
+__pl_oc_temp_limit() {
+  return
+}
+
+__pl_oc_temp_soft_limit() {
+  return
+}
