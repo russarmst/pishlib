@@ -36,3 +36,8 @@ __pl_cpu_freq_govenor() {
 __pl_cpu_set_freq_govenor() {
   return
 }
+
+__pl_cpu_temp() {
+  temp=$(cat /sys/class/thermal/thermal_zone0/temp)/1000
+  echo "$temp"
+}
