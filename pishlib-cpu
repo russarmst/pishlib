@@ -2,13 +2,13 @@
 
 pl_cpu() {
     case $1 in
-      get_freq_min)
+      freq_min)
         echo "$(__pl_cpu_freq_min)"
         ;;
-      get_freq_max)
+      freq_max)
         echo "$(__pl_cpu_freq_max)"
         ;;
-      get_govenor)
+      govenor)
         echo "$(__pl_cpu_freq_govenor)"
         ;;
       set_govenor)
