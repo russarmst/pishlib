@@ -26,23 +26,70 @@ pl_cpu() {
     esac
 }
 
+__pl_cpu_freq_cur() {
+  echo "$(/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq)"
+
+}
+
 __pl_cpu_freq_min() {
-  return
+    echo "$(/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq)"
 }
 
 __pl_cpu_freq_max() {
-  return
+  echo "$(/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq)"
 }
 
-__pl_cpu_freq_govenor() {
-  return
+__pl_cpu_govenor() {
+  if [[ $2 = "" ]]; then
+    echo "$(__pl_cpu_get_govenor)"
+  else
+    echo "$(__pl_cpu_set_govenor)"
+  fi
 }
 
-__pl_cpu_set_freq_govenor() {
-  return
+__pl_cpu_gov_up_threshold() {
+  if [[ $2 = "" ]]; then
+    echo "$(__pl_cpu_get_up_threshold)"
+  else
+    echo "$(__pl_cpu_set_up_threshold)"
+  fi
+}
+
+__pl_cpu_gov_down_threshold() {
+  if [[ $2 = "" ]]; then
+    echo "$(__pl_cpu_get_down_threshold)"
+  else
+    echo "$(__pl_cpu_set_down_threshold)"
+  fi
 }
 
 __pl_cpu_temp() {
-  temp=$(cat /sys/class/thermal/thermal_zone0/temp)/1000
+  temp=$(cat /sys/class/thermal/thermal_zone0/temp)
   echo "$temp"
+}
+
+__pl_cpu_get_govenor() {
+  echo "$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)"
+}
+
+__pl_cpu_set_govenor() {
+  return
+}
+
+cpu_get_up_threshold() {
+  local govenor="$(__pl_cpu_get_govenor)"
+  echo "$(cat /sys/devices/system/cpu/cpufreq/$govenor/up_threshold)"
+}
+
+cpu_set_up_threshold() {
+  return
+}
+
+cpu_get_down_threshold() {
+  local govenor="$(__pl_cpu_get_govenor)"
+  echo "$(cat /sys/devices/system/cpu/cpufreq/$govenor/down_threshold)"
+}
+
+cpu_set_down_threshold() {
+  return
 }
