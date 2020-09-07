@@ -2,6 +2,9 @@
 
 pl_cpu() {
     case $1 in
+      freq_current)
+        echo "$(__pl_cpu_freq_cur)"
+        ;;
       freq_min)
         echo "$(__pl_cpu_freq_min)"
         ;;
@@ -9,11 +12,13 @@ pl_cpu() {
         echo "$(__pl_cpu_freq_max)"
         ;;
       govenor)
-        echo "$(__pl_cpu_freq_govenor)"
+        echo "$(__pl_cpu_govenor $@)"
         ;;
-      set_govenor)
-        __pl_cpu_set_freq_govenor
-        echo "$?"
+      govenor_up_threshold)
+        echo "$(__pl_cpu_gov_up_threshold $@)"
+        ;;
+      govenor_down_threshold)
+        echo "$(__pl_cpu_gov_down_threshold $@)"
         ;;
       temp)
         echo "$(__pl_cpu_temp)"
