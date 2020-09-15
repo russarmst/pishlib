@@ -6,13 +6,13 @@ pl_model() {
 
   case $1 in
 
-    "")
-      printf "Manufacturer: %s\n" $(__pl_model_attribute manufacturer)
-      printf "Memory: %s\n" $(__pl_model_attribute memory)
-      printf "Processor: %s\n" $(__pl_model_attribute processor)
-      printf "Revision: %s\n" $(__pl_model_attribute revision)
-      printf "Type: %s\n" $(__pl_model_attribute type)
-      printf "Revision Code: %s\n" $(__pl_model_revision_code)
+    print_summary)
+      printf "Manufacturer: %s\n" "$(__pl_model_attribute manufacturer)"
+      printf "Memory: %s\n" "$(__pl_model_attribute memory)"
+      printf "Processor: %s\n" "$(__pl_model_attribute processor)"
+      printf "Revision: %s\n" "$(__pl_model_attribute revision)"
+      printf "Type: %s\n" "$(__pl_model_attribute type)"
+      printf "Revision Code: %s\n" "$(__pl_model_revision_code)"
       ;;
 
     manufacturer|memory|processor|revision|type)
@@ -25,32 +25,41 @@ pl_model() {
       ;;
 
     gt)
+      return
       ;;
 
     lt)
+      return
       ;;
     
     eq)
       # Valid values:
       #   1A, 1A+, 1B, 1B+, 2B, 3A+, 3B, 3B+, 4B, CM1, CM3, CM3+, Zero, ZeroW.
+      return
       ;;
 
     has_wifi)
+      return
       ;;
 
     has_lan)
+      return
       ;;
 
     has_bt)
+      return
       ;;
 
     has_csi)
+      return
       ;;
 
     is32bit)
+      return
       ;;
     
     is64bit)
+      return
       ;;
 
     *)
@@ -63,7 +72,7 @@ pl_model() {
 __pl_model_attribute() {
   local attribute=$1
   local rev_code="$(__pl_model_revision_code)"
-  if [ $(__pl_model_rev_code_is_new "$rev_code") ]; then
+  if [ "$(__pl_model_rev_code_is_new "$rev_code")" ]; then
     local model_attribute="$(__pl_model_new_rev_code_decode $attribute $rev_code)"
   else
     local model_attribute="$(__pl_model_old_rev_code_decode $attribute $rev_code)"
@@ -110,8 +119,8 @@ __pl_model_old_rev_code_decode() {
   )
   declare -A model_attribute_lookup_index=([manufacturer]=1 [memory]=2 [processor]=3 [revision]=4 [type]=5)
   local index=${model_attribute_lookup_index[attribute]}
-  declare -a model_attribute_lookup_array=(${model_attribute_lookup_lists[$index]})
-  echo $(model_attribute_lookup_array[index])
+  declare -a model_attribute_lookup_array=("${model_attribute_lookup_lists[$index]}")
+  echo "$(model_attribute_lookup_array[index])"
 }
 
 __pl_model_new_rev_code_decode() {
@@ -140,6 +149,6 @@ __pl_model_summary() {
   proc=$(__pl_model_attribute processor)
   rev=$(__pl_model_attribute revision)
   typ=$(__pl_model_attribute type)
-  echo "$manu" "$mem" "$proc" "$rev" "$typ"
+  echo "$manu,$mem,$proc,$rev,$typ"
 
 }
