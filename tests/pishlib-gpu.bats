@@ -6,151 +6,168 @@ load 'libs/bats-assert/load'
 source "${BATS_TEST_DIRNAME}/../pishlib-gpu" #>/dev/null 2>/dev/null
 
 
-@test "GPU 1. __pl-gpu_set 128: gpu_mem=64 in /boot/config.txt." {
+@test "GPU 1.0 pl_gpu frequency" {
+  run pl_gpu frequency
+  [[ $output =~ [1-9][0-9]+ ]]
+}
+
+@test "GPU 1.1. pl_gpu frequency: no vcgencmd" {
+  VCGENCMD=""
+  run pl_gpu frequency
+  [[ $output = 1 ]]
+}
+
+@test "GPU 2. pl_gpu memory total" {
+  run pl_gpu memory total
+  [[ $output =~ [0-9]+ ]]
+}
+
+@test "GPU 3. pl_gpu memory total=128: blank config.txt" {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-  cat <<EOF > $BOOT_CONF_FILE
-gpu_mem=64
-EOF
-  run __pl-gpu_set 128
-  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
+  run pl_gpu memory total=128
+  assert_equal "$(grep gpu_mem $BOOT_CONF_FILE)" "gpu_mem=128"
   rm $BOOT_CONF_FILE
 }
 
-@test "GPU 2. __pl-gpu_set 128: # gpu_mem=64 in /boot/config.txt." {
+@test "GPU 4. pl_gpu memory total=8: insane setting, return 1." {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-  cat <<EOF > $BOOT_CONF_FILE
-# gpu_mem=64
-EOF
-  run __pl-gpu_set 128
-  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
+  run pl_gpu memory total=8
+  [[ $output -eq 1 ]]
   rm $BOOT_CONF_FILE
 }
 
-@test "GPU 3. __pl-gpu_set 128: gpu_mem does not exists in /boot/config.txt." {
+@test "GPU 5. pl_gpu memory total=1024: insane setting, return 1." {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-  run __pl-gpu_set 128
-  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
+  run pl_gpu memory total=1024
+  [[ $output -eq 1 ]]
   rm $BOOT_CONF_FILE
 }
 
-
-@test "GPU 4. __pl-gpu_get_mem: returns an integer from vcgencmd." {
-    touch ~/tmp_boot_conf.txt
-    BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-    cat <<EOF > $BOOT_CONF_FILE
-# gpu_mem=76
-EOF
-  VCGENCMD() {
-    echo "gpu=76M"
-  }
-  run __pl-gpu_get_mem
-  assert_output "76"
-}
-
-@test "GPU 5. __pl-gpu_get_mem: returns an integer from /boot/config.txt." {
-  VCGENCMD="" # vcgencmd not available, next best option is config.txt
+@test "GPU 6. pl_gpu memory total=128: gpu_mem already defined in config.txt" {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
   cat <<EOF > $BOOT_CONF_FILE
 gpu_mem=76
 EOF
-  run __pl-gpu_get_mem
-  assert_output "76"
+  run pl_gpu memory total=128
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
   rm $BOOT_CONF_FILE
 }
 
-@test "GPU 6. __pl-gpu_get_mem: returns default integer for Pi 1 or Pi Zero." {
-  # vcgencmd not available, gpu_mem not set in /boot/config.txt
-  # next best option return default gpu_mem according to the model
+@test "GPU 7. pl_gpu memory total=128: gpu_mem commented out in config.txt" {
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  cat <<EOF > $BOOT_CONF_FILE
+# gpu_mem=76
+EOF
+  run pl_gpu memory total=128
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
+  rm $BOOT_CONF_FILE
+}
+
+@test "GPU 8. pl_gpu memory total=default: Pi mem < 1024" {
+  # TODO: fake system memory size
+  skip "Need to implement fake system memory size."
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run pl_gpu memory total=default
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=64"
+  rm $BOOT_CONF_FILE
+}
+
+@test "GPU 9. pl_gpu memory total=default: Pi mem > 1024" {
+  # TODO: fake system memory size
+  skip "Need to implement fake system memory size."
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run pl_gpu memory total=default
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=76"
+  rm $BOOT_CONF_FILE
+}
+
+
+@test "GPU 10. pl_gpu memory total=max: Pi mem = 256." {
+  # TODO: fake system memory size
+  skip "Need to implement fake system memory size."
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run pl_gpu memory total=max
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=128"
+  rm $BOOT_CONF_FILE
+}
+
+@test "GPU 11. pl_gpu memory total=max: Pi mem = 512." {
+  # TODO: fake system memory size
+  skip "Need to implement fake system memory size."
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run pl_gpu memory total=max
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=384"
+  rm $BOOT_CONF_FILE
+}
+
+@test "GPU 12. pl_gpu memory total=max: Pi mem > 512." {
+  # TODO: fake system memory size
+  skip "Need to implement fake system memory size."
+  touch ~/tmp_boot_conf.txt
+  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
+  run pl_gpu memory total=max
+  assert_equal $(grep gpu_mem $BOOT_CONF_FILE) "gpu_mem=512"
+  rm $BOOT_CONF_FILE
+}
+
+@test "GPU 13. pl_gpu memory free" {
+  run pl_gpu memory free
+  [[ $output =~ [0-9]+ ]]
+}
+
+@test "GPU 14. pl_gpu memory used" {
+  run pl_gpu memory used
+  [[ $output =~ [0-9]+ ]]
+}
+
+@test "GPU 15. pl_gpu memory free: no vcgencmd" {
   VCGENCMD=""
-  pl-model() {
-    echo 0 # Pi model is 1 or Zero
-  }
-  touch ~/tmp_boot_conf.txt
-  BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-  run __pl-gpu_get_mem
-  assert_output "64"
-  rm $BOOT_CONF_FILE
+  run pl_gpu memory free
+  [[ $output =~ [0-9]+ ]]
 }
 
-@test "GPU 7. __pl-gpu_get_mem: returns default integer for any model except for Pi 1 or Pi Zero." {
-  # vcgencmd not available, gpu_mem not set in /boot/config.txt
-  # next best option return default gpu_mem according to the model
+@test "GPU 16. pl_gpu memory used: no vcgencmd" {
   VCGENCMD=""
-  pl-model() {
-    echo 1 # Pi model is not 1 or Zero
-  }
+  run pl_gpu memory used
+  [[ $output =~ [0-9]+ ]]
+}
+
+@test "GPU 17. pl_gpu model_memory: Pi mem 256." {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-  run __pl-gpu_get_mem
-  assert_output "76"
+  run pl_gpu model_memory 256=16
+  assert_equal $(grep gpu_mem_256 $BOOT_CONF_FILE) "gpu_mem_256=16"
   rm $BOOT_CONF_FILE
 }
 
-@test "GPU 8. __pl-gpu_get_default_mem: Returns default integer for Pi 1 and Pi Zero." {
-  pl-model() {
-    echo 0 # Pi model is 1 or Zero
-  }
-  run __pl-gpu_get_default_mem
-  assert_output "64"
-}
-
-@test "GPU 9. __pl-gpu_get_default_mem: Returns default integer for all models except Pi 1 and Pi Zero." {
-  pl-model() {
-    echo 1 # Pi model is not 1 or Zero
-  }
-  run __pl-gpu_get_default_mem
-  assert_output "76"
-}
-
-@test "GPU 10. __pl-gpu_get_max_mem: RPi model has 256mb." {
-  skip "TODO: implement test."
-}
-
-@test "GPU 11. __pl-gpu_get_max_mem: RPi model has 512mb." {
-  skip "TODO: implement test."
-}
-
-@test "GPU 12. __pl-gpu_get_max_mem: RPi model has more than 512mb." {
-  skip "TODO: implement test."
-}
-
-
-@test "GPU 13. __pl-gpu_insane setting: sanity check for integer for __pl-gpu_set. Sane." {
-  skip "TODO: implement test."
-}
-
-@test "GPU 14. __pl-gpu_insane setting: sanity check for integer for __pl-gpu_set. Insane." {
-  skip "TODO: implement test."
-}
-
-@test "GPU 15. pl-gpu_mem: Returns int of GPU memory allocated" {
-  run pl-gpu_mem
-  assert_output --regexp '^[0-9]+$'
-}
-
-@test "GPU 16. pl-gpu_mem default: Sets gpu_mem default to int." {
+@test "GPU 18. pl_gpu model_memory: Pi mem 512." {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-  run pl-gpu_mem default
-  run echo "$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')"
-  assert_output --regexp '^[0-9]+$'
+  run pl_gpu model_memory 512=32
+  assert_equal $(grep gpu_mem_512 $BOOT_CONF_FILE) "gpu_mem_512=32"
   rm $BOOT_CONF_FILE
 }
 
-@test "GPU 17. pl-gpu_mem max: Sets gpu_mem to max reccommended." {
+@test "GPU 19. pl_gpu model_memory: Pi mem 1024." {
   touch ~/tmp_boot_conf.txt
   BOOT_CONF_FILE=~/tmp_boot_conf.txt # overide pishlib
-  run pl-gpu_mem max
-  run echo "$(grep gpu_mem $BOOT_CONF_FILE | sed 's/[^0-9]*//g')"
-  assert_output --regexp '^[0-9]+$'
+  run pl_gpu model_memory 1024=64
+  assert_equal $(grep gpu_mem_1024 $BOOT_CONF_FILE) "gpu_mem_1024=64"
   rm $BOOT_CONF_FILE
 }
 
-@test "GPU 18. pl-gpu_mem integer: Sets gpu_mem to integer." {
-  run pl-gpu_mem
-  assert_output --regexp '^[0-9]+$'
+@test "GPU 20. pl_gpu temperature" {
+  run pl_gpu temperature
+  [[ "$output" =~ [0-9]+ ]]
+  [[ "$output" -lt 90 ]]
+  [[ "$output" -gt 1 ]]
 }
