@@ -1,6 +1,5 @@
-source pishlib-mem
-# TODO: move libs dit outs of tests dir
-source ./tests/libs/boot_config/boot_config
+source ./pishlib-mem
+source ./lib/boot_config/boot_config
 
 BOOT_CONF_FILE="/boot/config.txt"
 VCGENCMD="/usr/bin/vcgencmd"
