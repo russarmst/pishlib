@@ -27,17 +27,18 @@ pl_gpu() {
 }
 
 __pl_gpu_freq() {
-  if [[ ! -f $VCGENCMD ]]; then
-    return 1
+  if [[ -f $VCGENCMD ]]; then
+    # returns line similar to:
+    #   frequency(1)=250000000
+    local core_clock="$(vcgencmd measure_clock core)"
+    regex="frequency.*=([0-9]+)"
+    if [[ $core_clock =~ $regex ]]; then
+      local gpu_clock=$(("${BASH_REMATCH[1]}"/1000000))
+    fi
+    echo $gpu_clock
+  else
+    echo 1
   fi
-  # returns line similar to:
-  #   frequency(1)=250000000
-  local core_clock="$(vcgencmd measure_clock core)"
-  regex="frequency.*=([0-9]+)"
-  if [[ $core_clock =~ $regex ]]; then
-    local gpu_clock=$(("${BASH_REMATCH[1]}"/1000000))
-  fi
-  echo $gpu_clock
 }
 
 __pl_gpu_mem_dispatcher() {
