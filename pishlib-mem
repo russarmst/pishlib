@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source pishlib-model
-source ./libs/boot_config/boot_config
+source ./lib/boot_config/boot_config
 
 pl_mem() {
 
