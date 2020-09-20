@@ -19,7 +19,7 @@ source "${BATS_TEST_DIRNAME}/../pishlib-gpu" #>/dev/null 2>/dev/null
 
 @test "GPU 2. pl_gpu memory total" {
   run pl_gpu memory total
-  [[ $output =~ [0-9]+ ]]
+  [[ $output =~ [1-9][0-9]+ ]]
 }
 
 @test "GPU 3. pl_gpu memory total=128: blank config.txt" {
