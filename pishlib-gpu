@@ -109,10 +109,8 @@ __pl_decode_mem_size() {
   local property_value="$(__pl_property_value $1)"
   if [[ "$property_value" =~ [0-9]+ ]]; then
     local __pl_gpu_mem="$property_value"
-    return $?
   elif [[ "$property_value" = "default" ]]; then
     local __pl_gpu_mem="$(__pl_gpu_mem_default)"
-    return $?
   elif [[ "$property_value" = "max" ]]; then
     local __pl_gpu_mem="$(__pl_gpu_mem_max)"
   else 
