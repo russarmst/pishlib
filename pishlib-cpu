@@ -48,6 +48,9 @@ __pl_cpu_govenor() {
 }
 
 __pl_cpu_gov_up_threshold() {
+  if [[ ! $(__pl_cpu_govenor_is_ondemand) ]]; then
+    return 1
+  fi
   if [[ $2 = "" ]]; then
     echo "$(__pl_cpu_get_up_threshold)"
   else
@@ -92,4 +95,12 @@ cpu_get_down_threshold() {
 
 cpu_set_down_threshold() {
   return
+}
+
+__pl_cpu_govenor_is_ondemand() {
+  if [[ "$(__pl_cpu_get_govenor)" = ondemand ]]; then
+    return 0
+  else
+    return 1
+  fi
 }
