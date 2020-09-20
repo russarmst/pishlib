@@ -58,7 +58,7 @@ fi
       - [***pl_gpu memory total***](#pl_gpu-memory-total)
       - [***pl_gpu memory free***](#pl_gpu-memory-free)
       - [***pl_gpu memory used***](#pl_gpu-memory-used)
-      - [***pl_gpu model_mem (256|512|1024)=xxx***](#pl_gpu-model_mem-2565121024xxx)
+      - [***pl_gpu model_memory (256|512|1024)=xxx***](#pl_gpu-model_memory-2565121024xxx)
       - [***pl_gpu temperature current***](#pl_gpu-temperature-current)
       - [***pl_gpu frequency current***](#pl_gpu-frequency-current)
     - [Model functions](#model-functions)
@@ -333,7 +333,7 @@ Example:
 
 If a parameter is passed either as an integer (in Mebibytes), "default" or "max" the amount of GPU memory is set accordingly.
 
-If "defaults" is passed the GPU memory is set accroding to the following table:
+If "default" is passed the GPU memory is set accroding to the following table:
 | Pi Model Memory  | gpu_mem default value |
 |------------------|-----------------------|
 | =< 1Gb           | 64                    |
@@ -376,7 +376,7 @@ Example:
 ```
 
 
-#### ***pl_gpu model_mem (256|512|1024)=xxx***
+#### ***pl_gpu model_memory (256|512|1024)=xxx***
 Sets the GPU memory (in megabytes) to xxx for Raspberry Pis with 256Mb|512Mb|1024Mb of memory. (It is ignored if memory size is not 256Mb|512Mb|1024Mb). This overrides the gpu_mem setting in /boot/config.txx.
 
 Setting this will allow swapping the boot drive between Pis with different amounts of RAM without having to edit /boot/config.txt each time.
@@ -674,7 +674,7 @@ Applies to the **3A+/3B+** only. Sets the temperature (in degrees celcius) at wh
 
 Example:
 ```shell
-    pl_overclock temp_limit soft=65
+    pl_overclock temp_limit soft=**65**
 ```
 
 
