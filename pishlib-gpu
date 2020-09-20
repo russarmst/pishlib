@@ -1,36 +1,127 @@
 source pishlib-mem
-source ./libs/boot_config/boot_config
+# TODO: move libs dit outs of tests dir
+source ./tests/libs/boot_config/boot_config
 
 BOOT_CONF_FILE="/boot/config.txt"
 VCGENCMD="/usr/bin/vcgencmd"
 
-pl_gpu_mem() {
+pl_gpu() {
 
   case $1 in
-
-    get)
-      __pl_gpu_mem_get
+    frequency)
+      echo "$(__pl_gpu_freq)"
       ;;
-
-    default)
-      __pl_gpu_mem_set "$(__pl_gpu_mem_get_default)"
+    memory)
+      echo $(__pl_gpu_mem_dispatcher $2)
       ;;
-
-    max)
-      __pl_gpu_mem_set "$(__pl_gpu_mem_get_max)"
+    model_memory)
+      __pl_model_mem_set $1
+      return $?
       ;;
-
-    set)
-      __pl_gpu_mem_set "$2"
+    temperature)
+      echo "$(__pl_gpu_temp)"
       ;;
-
     *)
       return 1
       ;;
   esac
 }
- 
-__pl_gpu_mem_get() {
+
+__pl_gpu_freq() {
+  if [[ ! -f $VCGENCMD ]]; then
+    return 1
+  fi
+  # returns line similar to:
+  #   frequency(1)=250000000
+  local core_clock="$(vcgencmd measure_clock core)"
+  regex="frequency.*=([0-9]+)"
+  if [[ $core_clock =~ $regex ]]; then
+    local gpu_clock=$(("${BASH_REMATCH[1]}"/1000000))
+  fi
+  echo $gpu_clock
+}
+
+__pl_gpu_mem_dispatcher() {
+  case $1 in
+    total*)
+      if [[ "$(__pl_is_assignment $1)" ]]; then
+        __pl_gpu_mem_set "$(__pl_decode_mem_size $1)"
+        return $?
+      else
+        echo "$(__pl_gpu_mem)"
+      fi
+      ;;
+    free)
+      if [[ -f $VCGENCMD ]]; then
+        echo "$(vcgencmd get_mem reloc)"
+      else 
+        return 1
+      fi
+      ;;
+    used)
+      if [[ -f $VCGENCMD ]]; then
+        echo "$(vcgencmd get_mem malloc_total)"
+      else
+        return 1
+      fi
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+
+__pl_model_mem_set() {
+  local property="gpu_mem_$(__pl_property_name $1)"
+  boot_config change_property_value "$property" "$(__pl_property_value $1)"
+  return $?
+}
+
+__pl_gpu_temp() {
+  local temp="$(cat /sys/class/thermal/thermal_zone0/temp)"
+  echo "$((temp/1000))"
+}
+
+__pl_is_assignment() {
+      local sub_str='='
+      if [[ "$1" == *"$sub_str"*  ]]; then
+        return 0
+      else
+        return 1
+      fi
+}
+
+__pl_gpu_mem_set() {
+  local gpu_mem_size="$(__pl_decode_mem_size $1)"
+  if [[ ! $(__pl_gpu_setting_is_sane $gpu_mem_size) ]]; then
+    return 1
+  fi
+  if [[ $(boot_config contains gpu_mem) ]]; then
+    boot_config change_property_value gpu_mem "$gpu_mem_size"
+  else
+    boot_config append_property gpu_mem "$gpu_mem_size"
+  fi
+  return 0
+}
+
+__pl_decode_mem_size() {
+  local property_value="$(__pl_property_value $1)"
+  if [[ "$property_value" =~ [0-9]+ ]]; then
+    local __pl_gpu_mem="$property_value"
+    return $?
+  elif [[ "$property_value" = "default" ]]; then
+    local __pl_gpu_mem="$(__pl_gpu_mem_default)"
+    return $?
+  elif [[ "$property_value" = "max" ]]; then
+    local __pl_gpu_mem="$(__pl_gpu_mem_max)"
+  else 
+    return 1
+  fi
+  echo "$__pl_gpu_mem"
+}
+
+__pl_gpu_mem() {
   # If gpu_mem not defined $BOOT_CONF_FILE __gpu_mem will be "".
   local __gpu_mem="$(boot_config get_property_value gpu_mem)"
   
@@ -39,14 +130,23 @@ __pl_gpu_mem_get() {
     local __gpu_mem=$("$VCGENCMD" get_mem gpu | sed 's/[^0-9]*//g')
   elif [[ $__gpu_mem -eq "" ]]; then
     # gpu_mem is set to default according to RAM size.
-    local __gpu_mem=$(__pl_gpu_mem_get_default)
+    local __gpu_mem=$(__pl_gpu_mem_default)
   fi
   
   echo "$__gpu_mem"
 }
 
-__pl_gpu_mem_get_default() {
-  if [[ "$(pl_mem lt 1024)"]]; then
+
+__pl_property_name() {
+  echo "$1" | cut -d'=' -f 1
+}
+
+__pl_property_value() {
+  echo "$1" | cut -d'=' -f 2
+}
+
+__pl_gpu_mem_default() {
+  if [[ "$(pl_mem lt 1024)" ]]; then
       local __gpu_mem=64
   else
       local __gpu_mem=76
@@ -54,7 +154,7 @@ __pl_gpu_mem_get_default() {
   echo "$__gpu_mem"
 }
 
-__pl_gpu_mem_get_max() {
+__pl_gpu_mem_max() {
   if [[ "$(pl_mem is 256)" ]]; then
     __gpu_mem=128
   elif [[ "$(pl_mem is 512)" ]]; then
@@ -70,17 +170,7 @@ __pl_gpu_setting_is_sane() {
   # greater than 512 doesn't make sense
   if [[ "$1" -gt 16 ]] || [[ "$1" -lt 512 ]]; then
     return 0
-  fi
-}
-
-__pl_gpu_mem_set() {
-  local gpu_mem_size=$1
-  if [[ ! $(__pl_gpu_setting_is_sane) ]]; then
-    return 1
-  fi
-  if [[ $(boot_config contains gpu_mem) ]]; then
-    boot_config change_property_value gpu_mem "$gpu_mem_size"
   else
-    boot_config append_property gpu_mem "$gpu_mem_size"
+    return 1
   fi
 }
